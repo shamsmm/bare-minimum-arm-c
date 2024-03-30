@@ -37,6 +37,33 @@ SECTIONS
         _edata = . ;
     } > RAM
 
+    .bss : {
+        . = ALIGN(4);
+        /* This is used by the startup in order to initialize the .bss secion */
+        _sbss = .;
+	    __bss_start__ = _sbss;
+        *(.bss)
+        *(.bss.*)
+        *(COMMON)
+
+        . = ALIGN(4);
+        _ebss = . ;
+	    __bss_end__ = _ebss;
+    } >RAM
+
+    PROVIDE ( end = _ebss );
+    PROVIDE ( _end = _ebss );
+    PROVIDE ( _exit = _ebss );
+
+    /* TODO: This is for compiling the standard library, this should be real functions */
+    PROVIDE ( _close = _ebss );
+    PROVIDE ( _lseek = _ebss );
+    PROVIDE ( _read = _ebss );
+    PROVIDE ( _sbrk = _ebss );
+    PROVIDE ( _write = _ebss );
+
+    PROVIDE (_stackend = ORIGIN(RAM) + LENGTH(RAM) - _Minimum_Stack_Size);
+
     _end_of_ram = ORIGIN(RAM) + LENGTH(RAM);
     _estack = _end_of_ram;
 }

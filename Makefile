@@ -16,13 +16,13 @@ vpath %.c $(DEVICE)
 vpath %.c src
 vpath %.s src
 
-CFLAGS=-ggdb -nostdlib -DSTM32F10X_MD_VL -DUSE_STDPERIPH_DRIVER -mthumb -mcpu=cortex-m3
+CFLAGS=-ggdb -DSTM32F10X_MD_VL -DUSE_STDPERIPH_DRIVER -mthumb -mcpu=cortex-m3
 
 SRC=src
 BUILD=build
 
 # OBJS is the list of object target files to compile
-OBJS=startup.o main.o stm32f10x_gpio.o stm32f10x_rcc.o
+OBJS=startup.o main.o test.o stm32f10x_gpio.o stm32f10x_rcc.o
 
 # Add library paths for compiler
 CFLAGS+= -I$(DEVICE) -I$(CORE) -I$(PERIPH)/inc -Isrc/
