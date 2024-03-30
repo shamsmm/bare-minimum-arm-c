@@ -22,7 +22,7 @@ SRC=src
 BUILD=build
 
 # OBJS is the list of object target files to compile
-OBJS=startup.o main.o test.o stm32f10x_gpio.o stm32f10x_rcc.o
+OBJS=startup.o main.o test.o stm32f10x_gpio.o stm32f10x_rcc.o stm32f10x_usart.o
 
 # Add library paths for compiler
 CFLAGS+= -I$(DEVICE) -I$(CORE) -I$(PERIPH)/inc -Isrc/
