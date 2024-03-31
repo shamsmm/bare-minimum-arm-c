@@ -14,6 +14,10 @@ void digitalWrite(struct GPIO gpio, enum GPIO_STATE state) {
     *(gpio.port + GPIOx_ODR) = (state != 0) << gpio.pin;
 }
 
+enum GPIO_STATE digitalRead(struct GPIO gpio) {
+    return (*(gpio.port + GPIOx_IDR) & (1 << gpio.pin)) != 0 ? HIGH : LOW;
+}
+
 void digitalSet(struct GPIO gpio) {
     *(gpio.port + GPIOx_BSRR) = 1 << gpio.pin;
 }

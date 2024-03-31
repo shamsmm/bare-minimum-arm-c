@@ -14,17 +14,10 @@ void main() {
     pinMode(PC13, OUTPUT_ULTRA_FAST);
 
     while(1) {
-        // Blink an LED while transmission
-
-        digitalSet(PC13);
-        delay();
-
-        // Transmit message
-
-        // Send a newline
-        // UART_SendByte(&UART, '\n');
-
-        digitalReset(PC13);
-        delay();
+        // Turn on LED on
+        if (digitalRead(PB8))
+            digitalSet(PC13);
+        else
+            digitalReset(PC13);
     }
 }

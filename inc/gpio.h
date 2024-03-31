@@ -37,6 +37,7 @@ struct GPIO_CONFIGURATION {
 };
 
 void digitalWrite(struct GPIO gpio, enum GPIO_STATE state);
+enum GPIO_STATE digitalRead(struct GPIO gpio);
 void digitalSet(struct GPIO gpio);
 void digitalReset(struct GPIO gpio);
 void pinMode(struct GPIO, struct GPIO_CONFIGURATION);

@@ -18,15 +18,24 @@ const static struct GPIO PC14 = {PORTC,14};
 const static struct GPIO PC15 = {PORTC,15};
 
 const static struct GPIO PA0 = {PORTA, 0};
-const static struct GPIO PA1 = {PORTA, 0};
-const static struct GPIO PA2 = {PORTA, 0};
-const static struct GPIO PA3 = {PORTA, 0};
-const static struct GPIO PA4 = {PORTA, 0};
-const static struct GPIO PA5 = {PORTA, 0};
-const static struct GPIO PA6 = {PORTA, 0};
-const static struct GPIO PA7 = {PORTA, 0};
+const static struct GPIO PA1 = {PORTA, 1};
+const static struct GPIO PA2 = {PORTA, 2};
+const static struct GPIO PA3 = {PORTA, 3};
+const static struct GPIO PA4 = {PORTA, 4};
+const static struct GPIO PA5 = {PORTA, 5};
+const static struct GPIO PA6 = {PORTA, 6};
+const static struct GPIO PA7 = {PORTA, 7};
 
 const static struct GPIO PB0 = {PORTB, 0};
+const static struct GPIO PB1 = {PORTB, 1};
+const static struct GPIO PB2 = {PORTB, 2};
+const static struct GPIO PB3 = {PORTB, 3};
+const static struct GPIO PB4 = {PORTB, 4};
+const static struct GPIO PB5 = {PORTB, 5};
+const static struct GPIO PB6 = {PORTB, 6};
+const static struct GPIO PB7 = {PORTB, 7};
+const static struct GPIO PB8 = {PORTB, 8};
+const static struct GPIO PB9 = {PORTB, 9};
 
 const static struct ClockConfiguration BLUEPILL_GPIO_CLOCK = {RCC_APB2ENR, IOPA | IOPB | IOPC};
 
