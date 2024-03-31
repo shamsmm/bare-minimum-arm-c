@@ -22,10 +22,10 @@ SRC=src
 BUILD=build
 
 # OBJS is the list of object target files to compile
-OBJS=startup.o main.o test.o stm32f10x_gpio.o stm32f10x_rcc.o stm32f10x_usart.o
+OBJS=startup.o main.o gpio.o rcc.o
 
 # Add library paths for compiler
-CFLAGS+= -I$(DEVICE) -I$(CORE) -I$(PERIPH)/inc -Isrc/
+CFLAGS+= -I$(DEVICE) -I$(CORE) -I$(PERIPH)/inc -Iinc/
 
 _ := $(shell mkdir -p $(BUILD))
 
