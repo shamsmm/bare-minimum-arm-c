@@ -8,6 +8,9 @@
 #define PORTB (volatile unsigned long *) 0x40010C00
 #define PORTC (volatile unsigned long *) 0x40011000
 
+#define ADC1  (volatile unsigned long *) 0x40012400
+#define ADC2  (volatile unsigned long *) 0x40012800
+
 
 const static struct GPIO_CONFIGURATION OUTPUT = {GPIO_MODE_OUTPUT_2MHz, GPIO_CNF_OUTPUT_PUSH_PULL};
 const static struct GPIO_CONFIGURATION OUTPUT_FAST = {GPIO_MODE_OUTPUT_10MHz, GPIO_CNF_OUTPUT_PUSH_PULL};
@@ -40,6 +43,12 @@ const static struct GPIO PB6 = {PORTB, 6};
 const static struct GPIO PB7 = {PORTB, 7};
 const static struct GPIO PB8 = {PORTB, 8};
 const static struct GPIO PB9 = {PORTB, 9};
+const static struct GPIO PB10 = {PORTB, 10};
+const static struct GPIO PB11 = {PORTB, 11};
+const static struct GPIO PB12 = {PORTB, 12};
+const static struct GPIO PB13 = {PORTB, 13};
+const static struct GPIO PB14 = {PORTB, 14};
+const static struct GPIO PB15 = {PORTB, 15};
 
 const static struct ClockConfiguration BLUEPILL_GPIO_CLOCK = {RCC_APB2ENR, IOPA | IOPB | IOPC};
 
