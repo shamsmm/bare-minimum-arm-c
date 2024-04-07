@@ -1,9 +1,9 @@
 #include "rcc.h"
 
-void clockConfiguration(struct ClockConfiguration conf) {
+void enableClocks(ClockConfiguration conf) {
     *(RCC + conf.offset) |= conf.value;
 }
 
-void clockConfigurationDisable(struct ClockConfiguration clockConfiguration) {
+void disableClocks(ClockConfiguration clockConfiguration) {
     *(RCC + clockConfiguration.offset) &= ~clockConfiguration.value;
 }

@@ -31,6 +31,7 @@ typedef enum GPIO_STATE {
 typedef struct GPIO {
     volatile unsigned long * port;
     byte pin;
+    byte adc;
 } GPIO;
 
 typedef struct GPIOBYTE {

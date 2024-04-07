@@ -22,7 +22,7 @@ SRC=src
 BUILD=build
 
 # OBJS is the list of object target files to compile
-OBJS=startup.o main.o gpio.o rcc.o
+OBJS=startup.o main.o gpio.o rcc.o adc.o
 
 # Add library paths for compiler
 CFLAGS+= -I$(DEVICE) -I$(CORE) -I$(PERIPH)/inc -Iinc/
