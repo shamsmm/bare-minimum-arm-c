@@ -11,11 +11,14 @@ void delay() {
 
 void main() {
     clockConfiguration(BLUEPILL_GPIO_CLOCK);
+
     pinMode(PC13, OUTPUT);
-    pinMode(PB9, INPUT_PULLUP);
+    pinModeByte(PB0PB7, OUTPUT);
+    pinModeByte(PB8PB15, INPUT_PULLDOWN);
 
     while(1) {
         // Turn on LED on
-        digitalWrite(PC13, !digitalRead(PB9));
+        digitalWrite(PC13, !digitalReadByte(PB8PB15));
+        digitalWriteByte(PB0PB7, !digitalRead(PB11) << 6);
     }
 }

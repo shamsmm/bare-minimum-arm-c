@@ -1,6 +1,8 @@
 #ifndef C0_GPIO_H
 #define C0_GPIO_H
 
+#include "common.h"
+
 #define GPIOx_CRL 0
 #define GPIOx_CRH 1
 #define GPIOx_IDR 2
@@ -21,27 +23,53 @@
 #define GPIO_CNF_OUTPUT_ALTERNATE_PUSH_PULL 2
 #define GPIO_CNF_OUTPUT_ALTERNATE_OPEN_DRAIN 3
 
-enum GPIO_STATE {
+typedef enum GPIO_STATE {
     HIGH = 1,
     LOW = 0,
-};
+} GPIO_STATE;
 
-struct GPIO {
+typedef struct GPIO {
     volatile unsigned long * port;
-    char pin;
-};
+    byte pin;
+} GPIO;
 
-struct GPIO_CONFIGURATION {
-    char mode;
-    char cnf;
-    enum GPIO_STATE odr;
-};
+typedef struct GPIOBYTE {
+    volatile unsigned long * port;
+    byte offset;
+} GPIOBYTE;
 
-void digitalWrite(struct GPIO gpio, enum GPIO_STATE state);
-enum GPIO_STATE digitalRead(struct GPIO gpio);
-void digitalSet(struct GPIO gpio);
-void digitalReset(struct GPIO gpio);
-void pinMode(struct GPIO, struct GPIO_CONFIGURATION);
+typedef struct GPIOHALFWORD {
+    volatile unsigned long * port;
+} GPIOHALFWORD;
+
+
+typedef struct GPIO_CONFIGURATION {
+    byte mode;
+    byte cnf;
+    GPIO_STATE odr;
+} GPIO_CONFIGURATION;
+
+void digitalWrite(GPIO gpio, GPIO_STATE state);
+
+void digitalWriteByte(GPIOBYTE gpiobyte, byte data);
+
+void digitalWriteHalfWord(GPIOHALFWORD gpiobyte, unsigned short data);
+
+GPIO_STATE digitalRead(GPIO gpio);
+
+byte digitalReadByte(GPIOBYTE gpiobyte);
+
+short digitalReadHalfWord(GPIOHALFWORD gpiohalfword);
+
+void digitalSet(GPIO gpio);
+
+void digitalReset(GPIO gpio);
+
+void pinMode(GPIO, GPIO_CONFIGURATION);
+
+void pinModeByte(GPIOBYTE, GPIO_CONFIGURATION);
+
+void pinModeHalfWord(GPIOHALFWORD, GPIO_CONFIGURATION);
 
 
 #endif //C0_GPIO_H

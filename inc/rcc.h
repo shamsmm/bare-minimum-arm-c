@@ -9,10 +9,10 @@
 #define IOPB 1 << 3
 #define IOPC 1 << 4
 
-struct ClockConfiguration {
+typedef struct ClockConfiguration {
     char offset;
     short value;
-};
+} ClockConfiguration;
 
 void clockConfiguration(struct ClockConfiguration conf);
 
