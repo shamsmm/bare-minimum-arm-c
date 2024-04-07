@@ -58,6 +58,6 @@ const static GPIOHALFWORD PB0PB15 = {PORTB};
 
 const static ClockConfiguration BLUEPILL_ALL_APB2_INTERFACES_CLOCK = {RCC_APB2ENR, IOPAEN | IOPBEN | IOPCEN | ADC1EN | ADC2EN};
 
-#define analogRead(gpio) analogReadInterface(ADC1, gpio)
+unsigned short analogRead(GPIO gpio);
 
 #endif //C0_BLUEPILL_H

@@ -13,17 +13,22 @@ void enableContinuousADC(ADC_CONFIGURATION conf) {
         __asm__ volatile ("nop");
 
     *(conf.interface + ADC_CR2) |= ADON;
+
+    *(conf.interface + ADC_CR2) |= CAL;
+
+    while (*(conf.interface + ADC_CR2) >> 3 & 1)
+        __asm__ volatile("nop");
 }
 
 unsigned short analogReadInterface(ADC_CONFIGURATION conf, GPIO gpio) {
     if (gpio.adc == NC)
         return 0;
 
-//    *(conf.interface + ADC_SQR3) = gpio.adc;
-//    *(conf.interface + ADC_SR) &= ~(0x1);
-//
-//    while (*(conf.interface + ADC_SR) >> 1 & 0x1)
-//        __asm__ volatile ("nop");
+    *(conf.interface + ADC_SQR3) = gpio.adc;
+    *(conf.interface + ADC_SR) &= ~(0x2);
+
+    while (!(*(conf.interface + ADC_SR) >> 1 & 0x1))
+        __asm__ volatile ("nop");
 
     return *(conf.interface + ADC_DR);
 }
