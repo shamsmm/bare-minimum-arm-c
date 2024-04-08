@@ -13,11 +13,17 @@ void delay() {
 unsigned short int value;
 
 void main() {
-    enablePLLAsSystemClock();
+    enablePLLAsSystemClock(PLL_Speed_72Mhz);
     enableClocks(BLUEPILL_ALL_APB2_INTERFACES_CLOCK);
+    enableUART(USART1, );
+
+    pinMode(PA9, ALTERNATE_PUSH_PULL);
+    pinMode(PA8, ALTERNATE_PUSH_PULL);
     pinMode(PC13, OUTPUT_ULTRA_FAST);
 
+
     while(1) {
+        UART_Transmit(USART1, 'a');
         delay();
         digitalWrite(PC13, HIGH);
         delay();
