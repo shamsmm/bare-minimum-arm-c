@@ -5,6 +5,7 @@
 #define CONT 1 << 1
 #define CAL 1 << 2
 #define RSTCAL 1 << 3
+#define TSVREFE 1 << 23
 
 void enableContinuousADC(ADC_CONFIGURATION conf) {
     *(conf.interface + ADC_CR2) |= CONT | ADON;
@@ -14,6 +15,8 @@ void enableContinuousADC(ADC_CONFIGURATION conf) {
 
     *(conf.interface + ADC_CR2) |= ADON;
 
+    *(conf.interface + ADC_CR2) |= TSVREFE;
+
     *(conf.interface + ADC_CR2) |= CAL;
 
     while (*(conf.interface + ADC_CR2) >> 3 & 1)
@@ -21,6 +24,8 @@ void enableContinuousADC(ADC_CONFIGURATION conf) {
 }
 
 unsigned short analogReadInterface(ADC_CONFIGURATION conf, ANALOG_CHANNEL channel) {
+    // Assuming clock is 128MHz, PCLK2 64MHz, ACDPRE 8
+
     *(conf.interface + ADC_SQR3) = channel;
     *(conf.interface + ADC_SR) &= ~(0x2);
 

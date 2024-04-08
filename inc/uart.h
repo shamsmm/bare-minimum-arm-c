@@ -24,5 +24,7 @@ typedef union BAUD {
 
 void enableUART(UART uart, unsigned int clock, unsigned int baud);
 void UART_Transmit(UART uart, char data);
+void UART_Transmit_Line(UART uart, const char* data);
+void UART_Transmit_Number(UART uart, unsigned short number);
 
 #endif //C0_UART_H

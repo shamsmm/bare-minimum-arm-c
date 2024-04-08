@@ -17,3 +17,39 @@ void UART_Transmit(UART uart, char data) {
     while(!(*(uart.interface + USART_SR) >> 6 & 1))
         __asm__ volatile("nop");
 }
+
+void UART_Transmit_Line(UART uart, const char* data) {
+    int i = 0;
+
+    while (*(data + i) != '\0') {
+        *(uart.interface + USART_DR) = *(data + i++);
+        while(!(*(uart.interface + USART_SR) >> 6 & 1))
+            __asm__ volatile("nop");
+    }
+}
+
+void UART_Transmit_Number(UART uart, unsigned short data) {
+    if (data == 0) {
+        UART_Transmit(uart, '0');
+        return;
+    }
+
+    char buffer[10];
+
+    byte i = 0;
+
+    while (data != 0) {
+        buffer[i++] = (char) (data % 10) + 48;
+        data /= 10;
+    }
+
+    for (byte j = 0; j < i / 2; j++) {
+        char temp = buffer[j];
+        buffer[j] = buffer[i - j - 1];
+        buffer[i - j - 1] = temp;
+    }
+
+    buffer[i] = '\0';
+
+    UART_Transmit_Line(uart, buffer);
+}
