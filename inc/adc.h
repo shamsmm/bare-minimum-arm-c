@@ -52,6 +52,6 @@ typedef struct ADC_CONFIGURATION {
 
 void enableContinuousADC(ADC_CONFIGURATION conf);
 
-unsigned short analogReadInterface(ADC_CONFIGURATION conf, GPIO gpio);
+unsigned short analogReadInterface(ADC_CONFIGURATION conf, ANALOG_CHANNEL channel);
 
 #endif //C0_ADC_H

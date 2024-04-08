@@ -13,17 +13,14 @@ void delay() {
 unsigned short int value;
 
 void main() {
+    enablePLLAsSystemClock();
     enableClocks(BLUEPILL_ALL_APB2_INTERFACES_CLOCK);
-    enableContinuousADC(ADC1);
-
-    pinMode(PA1, ANALOG_INPUT);
     pinMode(PC13, OUTPUT_ULTRA_FAST);
 
     while(1) {
-        value = analogRead(PA1);
-        if (value > 2000)
-            digitalWrite(PC13, LOW);
-        else
-            digitalWrite(PC13, HIGH);
+        delay();
+        digitalWrite(PC13, HIGH);
+        delay();
+        digitalWrite(PC13, LOW);
     }
 }

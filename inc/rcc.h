@@ -4,6 +4,7 @@
 #define RCC (volatile unsigned long *) 0x40021000
 
 #define RCC_APB2ENR 6
+#define RCC_CFGR 1
 
 #define IOPAEN 1 << 2
 #define IOPBEN 1 << 3
@@ -17,5 +18,7 @@ typedef struct ClockConfiguration {
 } ClockConfiguration;
 
 void enableClocks(struct ClockConfiguration conf);
+
+void enablePLLAsSystemClock();
 
 #endif //C0_RCC_H

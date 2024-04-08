@@ -20,11 +20,8 @@ void enableContinuousADC(ADC_CONFIGURATION conf) {
         __asm__ volatile("nop");
 }
 
-unsigned short analogReadInterface(ADC_CONFIGURATION conf, GPIO gpio) {
-    if (gpio.adc == NC)
-        return 0;
-
-    *(conf.interface + ADC_SQR3) = gpio.adc;
+unsigned short analogReadInterface(ADC_CONFIGURATION conf, ANALOG_CHANNEL channel) {
+    *(conf.interface + ADC_SQR3) = channel;
     *(conf.interface + ADC_SR) &= ~(0x2);
 
     while (!(*(conf.interface + ADC_SR) >> 1 & 0x1))
