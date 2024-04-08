@@ -16,6 +16,11 @@
 #define ADC2EN 1 << 10
 #define USART1EN 1 << 14
 
+typedef enum ClockSpeed {
+    PLL_Speed_72Mhz = 72000000,
+    PLL_Speed_128Mhz = 128000000
+} ClockSpeed;
+
 typedef struct ClockConfiguration {
     char offset;
     short value;

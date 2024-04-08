@@ -10,10 +10,6 @@
 #define PORTB (volatile unsigned long *) 0x40010C00
 #define PORTC (volatile unsigned long *) 0x40011000
 
-typedef enum ClockSpeed {
-    PLL_Speed_72Mhz,
-    PLL_Speed_128Mhz,
-} ClockSpeed;
 
 const static ADC_CONFIGURATION ADC1 = {(volatile unsigned long *) 0x40012400};
 

@@ -16,7 +16,8 @@ vpath %.c $(DEVICE)
 vpath %.c src
 vpath %.s src
 
-CFLAGS=-ggdb -DSTM32F10X_MD_VL -DUSE_STDPERIPH_DRIVER -mthumb -mcpu=cortex-m3
+#CFLAGS=-ggdb -DSTM32F10X_MD_VL -DUSE_STDPERIPH_DRIVER -mthumb -mcpu=cortex-m3
+CFLAGS=-ggdb -mthumb -mcpu=cortex-m3
 
 SRC=src
 BUILD=build
@@ -25,7 +26,8 @@ BUILD=build
 OBJS=startup.o main.o gpio.o rcc.o adc.o bluepill.o uart.o
 
 # Add library paths for compiler
-CFLAGS+= -I$(DEVICE) -I$(CORE) -I$(PERIPH)/inc -Iinc/
+#CFLAGS+= -I$(DEVICE) -I$(CORE) -I$(PERIPH)/inc -Iinc/
+CFLAGS+= -Iinc/
 
 _ := $(shell mkdir -p $(BUILD))
 

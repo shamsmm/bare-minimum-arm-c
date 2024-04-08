@@ -15,7 +15,7 @@ unsigned short int value;
 void main() {
     enablePLLAsSystemClock(PLL_Speed_72Mhz);
     enableClocks(BLUEPILL_ALL_APB2_INTERFACES_CLOCK);
-    enableUART(USART1, );
+    enableUART(USART1, PLL_Speed_72Mhz / 2, 9600);
 
     pinMode(PA9, ALTERNATE_PUSH_PULL);
     pinMode(PA8, ALTERNATE_PUSH_PULL);
