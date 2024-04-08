@@ -2,7 +2,6 @@
 #define C0_RCC_H
 
 #include "common.h"
-#include "bluepill.h"
 
 #define RCC (volatile unsigned long *) 0x40021000
 
