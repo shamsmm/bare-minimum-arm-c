@@ -17,7 +17,7 @@ vpath %.c src
 vpath %.s src
 
 #CFLAGS=-ggdb -DSTM32F10X_MD_VL -DUSE_STDPERIPH_DRIVER -mthumb -mcpu=cortex-m3
-CFLAGS=-ggdb -mthumb -mcpu=cortex-m3
+CFLAGS=-ggdb -mthumb -mcpu=cortex-m3 -O2
 
 SRC=src
 BUILD=build
