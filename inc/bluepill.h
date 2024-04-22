@@ -10,6 +10,8 @@
 #define PORTB (volatile unsigned long *) 0x40010C00
 #define PORTC (volatile unsigned long *) 0x40011000
 
+#define TIM1 (volatile unsigned long *) 0x40012C00
+#define TIM2 (volatile unsigned long *) 0x40000000
 
 const static ADC_CONFIGURATION ADC1 = {(volatile unsigned long *) 0x40012400};
 
@@ -66,6 +68,7 @@ const static GPIOBYTE PB8PB15 = {PORTB, 8};
 const static GPIOHALFWORD PB0PB15 = {PORTB};
 
 const static ClockConfiguration BLUEPILL_ALL_APB2_INTERFACES_CLOCK = {RCC_APB2ENR, IOPAEN | IOPBEN | IOPCEN | ADC1EN | ADC2EN | USART1EN};
+const static ClockConfiguration BLUEPILL_ALL_APB1_INTERFACES_CLOCK = {RCC_APB1ENR, 1};
 
 unsigned short analogRead(GPIO gpio);
 

@@ -10,6 +10,7 @@
 #define PLLSRC 16
 #define MCO 24
 #define ADCPRE 14
+#define PPRE1 8
 #define HPRE 4
 
 #define FLASH_INTERFACE (unsigned long *) 0x40022000
@@ -40,6 +41,7 @@ void enablePLLAsSystemClockWithMultiplication(byte mul) {
 
     *FLASH_INTERFACE |= 0b10010;
     *(RCC + RCC_CFGR) |= 3 << ADCPRE;
+    *(RCC + RCC_CFGR) |= 4 << PPRE1;
 
     *(RCC + RCC_CFGR) |= 8 << HPRE;
     *(RCC + RCC_CFGR) |= 2;
