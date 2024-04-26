@@ -23,7 +23,7 @@ typedef enum ClockSpeed {
 
 typedef struct ClockConfiguration {
     char offset;
-    short value;
+    unsigned long value;
 } ClockConfiguration;
 
 void enableClocks(struct ClockConfiguration conf);

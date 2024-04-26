@@ -24,6 +24,11 @@ void disableClocks(ClockConfiguration clockConfiguration) {
 }
 
 void enablePLLAsSystemClockWithMultiplication(byte mul) {
+    /*
+     * SYSCLK --> AHB --> APB1 == PCLK1
+     *                  |
+     *                  APB2 == PCLK2
+     * */
     *RCC |= 1 << HSEON;
 
     while (!(*RCC >> HSERDY & 1))
@@ -41,9 +46,9 @@ void enablePLLAsSystemClockWithMultiplication(byte mul) {
 
     *FLASH_INTERFACE |= 0b10010;
     *(RCC + RCC_CFGR) |= 3 << ADCPRE;
-    *(RCC + RCC_CFGR) |= 4 << PPRE1;
+    *(RCC + RCC_CFGR) |= 4 << PPRE1; // divide by 2 for APB1 == PCLK1, i.e. 32MHz
 
-    *(RCC + RCC_CFGR) |= 8 << HPRE;
+    *(RCC + RCC_CFGR) |= 8 << HPRE; // divide by 2 for AHB aka 64MHz
     *(RCC + RCC_CFGR) |= 2;
 
     while ((*(RCC + RCC_CFGR) & 0b1010) != 0b1010)
