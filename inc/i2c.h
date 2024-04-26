@@ -83,5 +83,7 @@ typedef struct I2C_SR2_TypeDef {
     unsigned char PEC: 8;
 } I2C_SR2_TypeDef;
 
+void I2C_Init();
+void I2C_Send(char address, char data);
 
 #endif //C0_I2C_H
