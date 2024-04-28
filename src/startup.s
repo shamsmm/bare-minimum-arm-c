@@ -3,7 +3,20 @@
 isr_vectors:
     .word _estack           // Supplied by the linker
     .word Reset_Handler     // This function has to be specified as .thumb_func
-
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word 0
+    .word SysTick_Handler
 
 .section .text.Reset_Handler
 .global Reset_Handler
@@ -29,3 +42,9 @@ LoopCopyDataInit:
     b LoopCopyDataInit
 CopyDataInitReturn:
     bx lr
+
+.weak	SysTick_Handler
+.set	SysTick_Handler, Default_Handler
+.thumb_func
+Default_Handler:
+    b .
