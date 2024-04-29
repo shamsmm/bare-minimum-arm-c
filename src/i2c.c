@@ -26,6 +26,19 @@ void I2C_Read(char address) {
     while (!I2C_SR1->TxE);
 }
 
+void I2C_Start_Raw(char address) {
+    while (I2C_SR2->BUSY);
+
+    I2C_CR1->ACK = 1;
+    I2C_CR1->START = 1;
+
+    while(!I2C_SR1->SB);
+
+    I2C_DR = address;
+    while (!I2C_SR1->ADDR || !I2C_SR2->MSL); // Reading from both SR1 and SR2 is required to clear ADDR flag
+
+    while (!I2C_SR1->TxE);
+}
 
 void I2C_Start(char address) {
     while (I2C_SR2->BUSY);
