@@ -85,6 +85,7 @@ typedef struct I2C_SR2_TypeDef {
 
 void I2C_Init();
 void I2C_Start(char address);
+void I2C_Read(char address);
 void I2C_Send(char data);
 void I2C_End();
 void I2C_Send_Byte(char address, char data);

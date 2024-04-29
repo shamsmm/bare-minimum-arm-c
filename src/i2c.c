@@ -12,6 +12,21 @@ void I2C_Init() {
     I2C_CR1->PE = 1;
 }
 
+void I2C_Read(char address) {
+    while (I2C_SR2->BUSY);
+
+    I2C_CR1->ACK = 1;
+    I2C_CR1->START = 1;
+
+    while(!I2C_SR1->SB);
+
+    I2C_DR = address << 1 | 1; // Slave Address is 7 bits and first bit is read
+    while (!I2C_SR1->ADDR || !I2C_SR2->MSL); // Reading from both SR1 and SR2 is required to clear ADDR flag
+
+    while (!I2C_SR1->TxE);
+}
+
+
 void I2C_Start(char address) {
     while (I2C_SR2->BUSY);
 
@@ -30,6 +45,7 @@ void I2C_Send(char data) {
     while (!I2C_SR1->BTF);
 }
 void I2C_End() {
+//    I2C_CR1->ACK = 0;
     I2C_CR1->STOP = 1;
 }
 
