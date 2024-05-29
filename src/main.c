@@ -54,9 +54,6 @@ void main() {
     LCD_1602_I2C_Write("Yes I slept");
 
     while(1) {
-        digitalWrite(PC13, HIGH);
-        delay(500);
-        digitalWrite(PC13, LOW);
-        delay(500);
+        I2C_Read(0x3C);
     }
 }
