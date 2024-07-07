@@ -1,7 +1,7 @@
 #ifndef C0_OLED_H
 #define C0_OLED_H
 
-#include "fonts.h"
+#include "../../lcd_st7735/inc/lcd_st7735/fonts.h"
 #include "i2c.h"
 
 #define OLED_7Bit_ADDRESS 0x3C

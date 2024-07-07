@@ -7,7 +7,7 @@
 
 void enableUART(UART uart, unsigned int clock, unsigned int baud) {
     unsigned short mantissa = clock / (16 * baud);
-    byte div = (byte) ((mantissa - ((long) clock / (16 * baud))) * 16);
+    uint8_t div = (uint8_t) ((mantissa - ((long) clock / (16 * baud))) * 16);
     *(uart.interface + USART_BRR) |= mantissa << 4 | div;
     *(uart.interface + USART_CR1) |= 1 << UE | 1 << TE;
 }
@@ -36,14 +36,14 @@ void UART_Transmit_Number(UART uart, unsigned short data) {
 
     char buffer[10];
 
-    byte i = 0;
+    uint8_t i = 0;
 
     while (data != 0) {
         buffer[i++] = (char) (data % 10) + 48;
         data /= 10;
     }
 
-    for (byte j = 0; j < i / 2; j++) {
+    for (uint8_t j = 0; j < i / 2; j++) {
         char temp = buffer[j];
         buffer[j] = buffer[i - j - 1];
         buffer[i - j - 1] = temp;

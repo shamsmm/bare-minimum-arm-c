@@ -5,7 +5,7 @@
  *      Author: meh
  */
 
-#include <ST7735.h>
+#include "../inc/lcd_st7735.h"
 #include "stdint.h"
 #include "stdlib.h"
 

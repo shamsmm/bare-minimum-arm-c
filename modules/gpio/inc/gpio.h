@@ -1,7 +1,7 @@
 #ifndef C0_GPIO_H
 #define C0_GPIO_H
 
-#include "common.h"
+#include <stdint.h>
 
 #define GPIOx_CRL 0
 #define GPIOx_CRH 1
@@ -30,13 +30,13 @@ typedef enum GPIO_STATE {
 
 typedef struct GPIO {
     volatile unsigned long * port;
-    byte pin;
-    byte adc;
+    uint8_t pin;
+    uint8_t adc;
 } GPIO;
 
 typedef struct GPIOBYTE {
     volatile unsigned long * port;
-    byte offset;
+    uint8_t offset;
 } GPIOBYTE;
 
 typedef struct GPIOHALFWORD {
@@ -45,20 +45,20 @@ typedef struct GPIOHALFWORD {
 
 
 typedef struct GPIO_CONFIGURATION {
-    byte mode;
-    byte cnf;
+    uint8_t mode;
+    uint8_t cnf;
     GPIO_STATE odr;
 } GPIO_CONFIGURATION;
 
 void digitalWrite(GPIO gpio, GPIO_STATE state);
 
-void digitalWriteByte(GPIOBYTE gpiobyte, byte data);
+void digitalWriteByte(GPIOBYTE gpiobyte, uint8_t data);
 
 void digitalWriteHalfWord(GPIOHALFWORD gpiobyte, unsigned short data);
 
 GPIO_STATE digitalRead(GPIO gpio);
 
-byte digitalReadByte(GPIOBYTE gpiobyte);
+uint8_t digitalReadByte(GPIOBYTE gpiobyte);
 
 short digitalReadHalfWord(GPIOHALFWORD gpiohalfword);
 

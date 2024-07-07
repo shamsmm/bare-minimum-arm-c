@@ -1,4 +1,4 @@
-#include "lcd.h"
+#include "../inc/lcd_1602.h"
 #define LCD_1602_EN (1 << 2)
 #define LCD_1602_RS (1 << 0)
 
@@ -19,14 +19,14 @@ void LCD_1602_I2C_Send_Nibble(char nibble) {
     delay(5);
 }
 
-void LCD_1602_I2C_Send_Command(char byte) {
-    LCD_1602_I2C_Send_Nibble(byte & 0xF0);
-    LCD_1602_I2C_Send_Nibble((byte << 4) & 0xF0 );
+void LCD_1602_I2C_Send_Command(char uint8_t) {
+    LCD_1602_I2C_Send_Nibble(uint8_t & 0xF0);
+    LCD_1602_I2C_Send_Nibble((uint8_t << 4) & 0xF0 );
 }
 
-void LCD_1602_I2C_Send_Data(char byte) {
-    LCD_1602_I2C_Send_Nibble(LCD_1602_RS | (byte & 0xF0));
-    LCD_1602_I2C_Send_Nibble(LCD_1602_RS | ((byte << 4) &  0xF0));
+void LCD_1602_I2C_Send_Data(char uint8_t) {
+    LCD_1602_I2C_Send_Nibble(LCD_1602_RS | (uint8_t & 0xF0));
+    LCD_1602_I2C_Send_Nibble(LCD_1602_RS | ((uint8_t << 4) &  0xF0));
 }
 
 

@@ -1,7 +1,7 @@
 #ifndef C0_RCC_H
 #define C0_RCC_H
 
-#include "common.h"
+#include <stdint.h>
 
 #define RCC (volatile unsigned long *) 0x40021000
 
@@ -28,7 +28,7 @@ typedef struct ClockConfiguration {
 
 void enableClocks(struct ClockConfiguration conf);
 
-void enablePLLAsSystemClockWithMultiplication(byte mul);
+void enablePLLAsSystemClockWithMultiplication(uint8_t mul);
 
 void enablePLLAsSystemClock(ClockSpeed speed);
 

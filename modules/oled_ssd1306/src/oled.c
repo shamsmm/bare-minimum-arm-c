@@ -1,4 +1,5 @@
 #include "oled.h"
+#include "oled/fonts.h"
 
 void OLED_I2C_Init() {
     I2C_Start(OLED_7Bit_ADDRESS);

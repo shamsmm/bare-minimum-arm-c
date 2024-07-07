@@ -1,8 +1,6 @@
 #ifndef C0_UART_H
 #define C0_UART_H
 
-#include "common.h"
-
 #define USART_SR 0
 #define USART_DR 1
 #define USART_BRR 2

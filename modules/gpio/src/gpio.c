@@ -14,7 +14,7 @@ void pinMode(const struct GPIO gpio, struct GPIO_CONFIGURATION conf) {
 }
 
 void pinModeByte(GPIOBYTE gpiobyte, struct GPIO_CONFIGURATION conf) {
-    byte pattern = ((conf.mode & 0b11) | (conf.cnf & 0b11) << 2);
+    uint8_t pattern = ((conf.mode & 0b11) | (conf.cnf & 0b11) << 2);
 
     if (gpiobyte.offset != 8) {
         *(gpiobyte.port + GPIOx_CRL) &= ~(0xFFFFFFFF);
@@ -50,7 +50,7 @@ void pinModeByte(GPIOBYTE gpiobyte, struct GPIO_CONFIGURATION conf) {
 }
 
 void pinModeHalfWord(GPIOHALFWORD gpiohalfword, struct GPIO_CONFIGURATION conf) {
-    byte pattern = ((conf.mode & 0b11) | (conf.cnf & 0b11) << 2);
+    uint8_t pattern = ((conf.mode & 0b11) | (conf.cnf & 0b11) << 2);
 
     *(gpiohalfword.port + GPIOx_CRL) &= ~(0xFFFFFFFF);
     *(gpiohalfword.port + GPIOx_CRL) |=
@@ -87,7 +87,7 @@ void digitalWriteHalfWord(GPIOHALFWORD gpiohalfword, unsigned short data) {
     *(gpiohalfword.port + GPIOx_ODR) = data;
 }
 
-void digitalWriteByte(GPIOBYTE gpiobyte, byte data) {
+void digitalWriteByte(GPIOBYTE gpiobyte, uint8_t data) {
     *(gpiobyte.port + GPIOx_ODR) = (*(gpiobyte.port + GPIOx_ODR) & (~(0xFF) << gpiobyte.offset)) | (data << gpiobyte.offset);
 }
 
@@ -102,8 +102,8 @@ GPIO_STATE digitalRead(GPIO gpio) {
     return (*(gpio.port + GPIOx_IDR) & (1 << gpio.pin)) != 0 ? HIGH : LOW;
 }
 
-byte digitalReadByte(GPIOBYTE gpiobyte) {
-    return (byte) ((*(gpiobyte.port + GPIOx_IDR) >> gpiobyte.offset) & (0xFF));
+uint8_t digitalReadByte(GPIOBYTE gpiobyte) {
+    return (uint8_t) ((*(gpiobyte.port + GPIOx_IDR) >> gpiobyte.offset) & (0xFF));
 }
 
 short digitalReadHalfWord(GPIOHALFWORD gpiohalfword) {

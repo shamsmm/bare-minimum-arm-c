@@ -1,13 +1,14 @@
+#include "main.h"
 #include "gpio.h"
 #include "rcc.h"
-#include "bluepill.h"
-#include "oled.h"
-#include "systick.h"
-#include "lcd.h"
+#include "../modules/bluepill/inc/bluepill.h"
+#include "../modules/oled_ssd1306/inc/oled.h"
+#include "../modules/timer/inc/systick.h"
+#include "../modules/lcd_1602/inc/lcd_1602.h"
 #include "../modules/adc/inc/adc.h"
 #include "spi.h"
-#include "ST7735.h"
-#include "GFX_FUNCTIONS.h"
+#include "../modules/lcd_st7735/inc/lcd_st7735.h"
+#include "../modules/lcd_st7735/inc/lcd_st7735/gfx.h"
 
 //#define SYSTICK_CLKSOURCE_EXTERNAL
 #define SYSTICK_CLKSOURCE_INTERNAL
@@ -15,7 +16,7 @@
 volatile unsigned long Tick = 0;
 
 // duration is in number of nop instructions, not time
-void SysTick_Handler() {
+void SysTickHandler() {
     Tick++;
 }
 
@@ -67,6 +68,7 @@ void main() {
 
     digitalWrite(PC13, HIGH);
     while(1) {
-        SPI_Transmit_Byte(SPI1, 0xAA);
+        ST7735_WriteString(0, 0, "HELLO", Font_11x18, RED,BLACK);
+        delay(500);
     }
 }

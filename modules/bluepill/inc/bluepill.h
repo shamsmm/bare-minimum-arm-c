@@ -3,8 +3,8 @@
 
 #include "gpio.h"
 #include "rcc.h"
-#include "../modules/adc/inc/adc.h"
-#include "../modules/uart/inc/uart.h"
+#include "adc.h"
+#include "uart.h"
 
 #define PORTA (volatile unsigned long *) 0x40010800
 #define PORTB (volatile unsigned long *) 0x40010C00

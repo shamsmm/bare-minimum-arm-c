@@ -1,5 +1,4 @@
 #include "rcc.h"
-#include "common.h"
 
 #define HSEON 16
 #define HSERDY 17
@@ -23,7 +22,7 @@ void disableClocks(ClockConfiguration clockConfiguration) {
     *(RCC + clockConfiguration.offset) &= ~clockConfiguration.value;
 }
 
-void enablePLLAsSystemClockWithMultiplication(byte mul) {
+void enablePLLAsSystemClockWithMultiplication(uint8_t mul) {
     /*
      * SYSCLK --> AHB --> APB1 == PCLK1
      *                  |
