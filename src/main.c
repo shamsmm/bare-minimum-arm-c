@@ -4,6 +4,10 @@
 #include "oled.h"
 #include "systick.h"
 #include "lcd.h"
+#include "adc.h"
+#include "spi.h"
+#include "ST7735.h"
+#include "GFX_FUNCTIONS.h"
 
 //#define SYSTICK_CLKSOURCE_EXTERNAL
 #define SYSTICK_CLKSOURCE_INTERNAL
@@ -35,25 +39,34 @@ void main() {
     enableClocks(BLUEPILL_ALL_APB2_INTERFACES_CLOCK);
     enableClocks(BLUEPILL_ALL_APB1_INTERFACES_CLOCK);
 
-    pinMode(PB6, ALTERNATE_OPEN_DRAIN);
-    pinMode(PB7, ALTERNATE_OPEN_DRAIN);
-
+//    pinMode(PA8, ALTERNATE_PUSH_PULL);
+    pinMode(PA9, ALTERNATE_PUSH_PULL);
     pinMode(PC13, OUTPUT_ULTRA_FAST);
 
-    delay(1000);
+    pinMode(PA2, OUTPUT_ULTRA_FAST);
+    pinMode(PB6, OUTPUT_ULTRA_FAST);
+    pinMode(PB11, OUTPUT_ULTRA_FAST);
 
-    I2C_Init();
-    OLED_I2C_Init();
-    LCD_1602_I2C_Init();
+    pinMode(PA7, ALTERNATE_PUSH_PULL);
+    pinMode(PA5, ALTERNATE_PUSH_PULL);
 
-    OLED_I2C_Write(0, 0, "Hi");
-    OLED_I2C_Write(0, 1, "There :)");
-    OLED_I2C_Write(0, 2, "I am");
-    OLED_I2C_Write(0, 3, "Coo00000***L");
+    delay(100);
 
-    LCD_1602_I2C_Write("Yes I slept");
+    SPI1->CR1.MSTR = 1;
+    SPI1->CR1.BR = 3;
+    SPI1->CR1.BIDIMODE = 1;
+    SPI1->CR1.BIDIOE = 1;
+    SPI1->CR1.SSI = 1;
+    SPI1->CR1.SSM = 1;
+    SPI1->CR1.SPE = 1;
 
+    delay(100);
+
+    ST7735_Init(0);
+    fillScreen(BLACK);
+
+    digitalWrite(PC13, HIGH);
     while(1) {
-        I2C_Read(0x3C);
+        SPI_Transmit_Byte(SPI1, 0xAA);
     }
 }

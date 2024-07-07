@@ -17,13 +17,13 @@ vpath %.c src
 vpath %.s src
 
 #CFLAGS=-ggdb -DSTM32F10X_MD_VL -DUSE_STDPERIPH_DRIVER -mthumb -mcpu=cortex-m3
-CFLAGS=-ggdb -mthumb -mcpu=cortex-m3 -O0
+CFLAGS=-ggdb -mthumb -mcpu=cortex-m3
 
 SRC=src
 BUILD=build
 
 # OBJS is the list of object target files to compile
-OBJS=startup.o main.o gpio.o rcc.o adc.o bluepill.o uart.o i2c.o oled.o lcd.o
+OBJS=startup.o main.o gpio.o rcc.o adc.o bluepill.o uart.o i2c.o lcd.o spi.o ST7735.o GFX_FUNCTIONS.o fonts.o
 
 # Add library paths for compiler
 #CFLAGS+= -I$(DEVICE) -I$(CORE) -I$(PERIPH)/inc -Iinc/
@@ -31,14 +31,11 @@ CFLAGS+= -Iinc/
 
 _ := $(shell mkdir -p $(BUILD))
 
-#flash: main.bin
-#	st-flash --reset write main.bin 0x08000000
-#
-#main.bin: main.elf
-#	$(OBJCOPY) -O binary -j .text -j .data main.elf main.bin
+flash: main.bin
+	st-flash --reset write main.bin 0x08000000
 
-flash: main.elf
-	openocd -f stlink.cfg -c "program main.elf verify reset exit"
+main.bin: main.elf
+	$(OBJCOPY) -O binary -j .text -j .data main.elf main.bin
 
 main.elf: $(OBJS)
 	$(CC) $(CFLAGS) -Tlinker.ld -o main.elf $(BUILD)/*

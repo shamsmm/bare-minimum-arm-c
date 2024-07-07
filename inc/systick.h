@@ -14,4 +14,6 @@ typedef struct SysTickControlAndStatusTypeDef {
                            :15;
 } SysTickControlAndStatusTypeDef;
 
+void delay(int milliseconds);
+
 #endif //C0_SYSTICK_H
