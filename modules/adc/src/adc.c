@@ -1,4 +1,4 @@
-#include "adc.h"
+#include "../inc/adc.h"
 #include "gpio.h"
 
 #define ADON 1 << 0

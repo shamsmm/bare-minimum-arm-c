@@ -1,50 +1,47 @@
-CC=arm-none-eabi-gcc
-OBJCOPY=arm-none-eabi-objcopy
+PROJECTNAME = EasyLibrary
 
-# The standard peripheral library root directory
-STDPERIPH=/home/shams/W/Embedded/ARM/Libraries/en.stsw-stm32054/STM32F10x_StdPeriph_Lib_V3.5.0
+TOOLCHAIN=arm-none-eabi
+CC=$(TOOLCHAIN)-gcc
 
-DEVICE=$(STDPERIPH)/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x
-CORE=$(STDPERIPH)/Libraries/CMSIS/CM3/CoreSupport
-PERIPH=$(STDPERIPH)/Libraries/STM32F10x_StdPeriph_Driver
+INCDIR = inc $(wildcard modules/*/inc)
+SRCDIR = src $(wildcard modules/*/src)
 
-# Paths to libraries .c source files
-vpath %.c $(CORE)
-vpath %.c $(PERIPH)/src
-vpath %.c $(DEVICE)
+INCLUDES = $(addprefix -I, $(INCDIR))
 
-vpath %.c src
-vpath %.s src
+SRC = $(wildcard modules/*/src/*.c)
+SRC += $(wildcard src/*.c)
+SRC += $(wildcard src/*.s)
 
-#CFLAGS=-ggdb -DSTM32F10X_MD_VL -DUSE_STDPERIPH_DRIVER -mthumb -mcpu=cortex-m3
-CFLAGS=-ggdb -mthumb -mcpu=cortex-m3
+OBJ = $(SRC:.c=.o)
 
-SRC=src
-BUILD=build
+vpath %.c $(SRCDIR)
+vpath %.s $(SRCDIR)
+vpath %.h $(INCDIR)
 
-# OBJS is the list of object target files to compile
-OBJS=startup.o main.o gpio.o rcc.o adc.o bluepill.o uart.o i2c.o lcd.o spi.o ST7735.o GFX_FUNCTIONS.o fonts.o
+BINDIR = build
 
-# Add library paths for compiler
-#CFLAGS+= -I$(DEVICE) -I$(CORE) -I$(PERIPH)/inc -Iinc/
-CFLAGS+= -Iinc/
+TARGET = $(BINDIR)/main.elf
 
-_ := $(shell mkdir -p $(BUILD))
+CFLAGS=-ggdb -mthumb -mcpu=cortex-m3 -O0 $(INCLUDES)
+ASMFLAGS=-ggdb -mthumb -mcpu=cortex-m3
 
-flash: main.bin
-	st-flash --reset write main.bin 0x08000000
+all: $(TARGET)
 
-main.bin: main.elf
-	$(OBJCOPY) -O binary -j .text -j .data main.elf main.bin
+flash: $(TARGET)
+	openocd -f stlink.cfg -c "program main.elf verify reset exit"
 
-main.elf: $(OBJS)
-	$(CC) $(CFLAGS) -Tlinker.ld -o main.elf $(BUILD)/*
+$(TARGET): clean $(OBJ)
+	$(CC) $(CFLAGS) -TSTM32F103.ld -o $(TARGET) $(addprefix $(BINDIR)/, $(OBJ))
 
 %.o: %.c
-	$(CC) -c $(CFLAGS) $< -o $(BUILD)/$@
+	@mkdir -p $(dir $(BINDIR)/$@)
+	$(CC) -c $(CFLAGS) $< -o $(BINDIR)/$@
 
 %.o: %.s
-	$(CC) -c $(CFLAGS) $< -o $(BUILD)/$@
+	@mkdir -p $(dir $(BINDIR)/$@)
+	$(CC) -c $(ASMFLAGS) $< -o $(BINDIR)/$@
 
 clean:
-	rm -f main.elf *.o build/*
+	rm -rf $(BINDIR)
+
+.PHONY: all clean flash

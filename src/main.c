@@ -4,7 +4,7 @@
 #include "oled.h"
 #include "systick.h"
 #include "lcd.h"
-#include "adc.h"
+#include "../modules/adc/inc/adc.h"
 #include "spi.h"
 #include "ST7735.h"
 #include "GFX_FUNCTIONS.h"
