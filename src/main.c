@@ -40,15 +40,15 @@ void main() {
     enableClocks(BLUEPILL_ALL_APB1_INTERFACES_CLOCK);
 
 //    pinMode(PA8, ALTERNATE_PUSH_PULL);
-    pinMode(PA9, ALTERNATE_PUSH_PULL);
-    pinMode(PC13, OUTPUT_ULTRA_FAST);
+    GPIO_PinMode(PA9, ALTERNATE);
+    GPIO_PinMode(PC13, OUTPUT);
 
-    pinMode(PA2, OUTPUT_ULTRA_FAST);
-    pinMode(PB6, OUTPUT_ULTRA_FAST);
-    pinMode(PB11, OUTPUT_ULTRA_FAST);
+    GPIO_PinMode(PA2, OUTPUT);
+    GPIO_PinMode(PB6, OUTPUT);
+    GPIO_PinMode(PB11, OUTPUT);
 
-    pinMode(PA7, ALTERNATE_PUSH_PULL);
-    pinMode(PA5, ALTERNATE_PUSH_PULL);
+    GPIO_PinMode(PA7, ALTERNATE);
+    GPIO_PinMode(PA5, ALTERNATE);
 
     delay(100);
 
@@ -65,7 +65,7 @@ void main() {
     ST7735_Init(0);
     fillScreen(BLACK);
 
-    digitalWrite(PC13, HIGH);
+    GPIO_WritePin(PC13, HIGH);
     int z = 0;
     char * koko = (char *) malloc(sizeof(char) * 10);
 

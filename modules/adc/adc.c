@@ -22,7 +22,7 @@ void enableContinuousADC(ADC_CONFIGURATION conf) {
         __asm__ volatile("nop");
 }
 
-unsigned short analogReadInterface(ADC_CONFIGURATION conf, ANALOG_CHANNEL channel) {
+unsigned short analogReadInterface(ADC_CONFIGURATION conf, ADC_Channel_TypeDef channel) {
     // Assuming clock is 128MHz, PCLK2 64MHz, ACDPRE 8
 
     *(conf.interface + ADC_SQR3) = channel;

@@ -2,12 +2,8 @@
 #define C0_GPIO_H
 
 #include <stdint.h>
-
-#define GPIOx_CRL 0
-#define GPIOx_CRH 1
-#define GPIOx_IDR 2
-#define GPIOx_ODR 3
-#define GPIOx_BSRR 4
+#include "adc/adc.h"
+#include "common/common.h"
 
 #define GPIO_MODE_INPUT 0
 #define GPIO_MODE_OUTPUT_10MHz 1
@@ -23,54 +19,63 @@
 #define GPIO_CNF_OUTPUT_ALTERNATE_PUSH_PULL 2
 #define GPIO_CNF_OUTPUT_ALTERNATE_OPEN_DRAIN 3
 
-typedef enum GPIO_STATE {
+typedef enum GPIO_Level {
     HIGH = 1,
     LOW = 0,
-} GPIO_STATE;
+} GPIO_Level_TypeDef;
 
-typedef struct GPIO {
-    volatile unsigned long * port;
-    uint8_t pin;
-    uint8_t adc;
-} GPIO;
+typedef struct GPIO_Base {
+    unsigned long CRL: 32;
+    unsigned long CRH: 32;
+    unsigned long IDR: 16;
+    unsigned long ODR: 16;
+    unsigned long BSRR: 16;
+    unsigned long BRR: 16;
+} GPIO_Base_TypeDef;
 
-typedef struct GPIOBYTE {
-    volatile unsigned long * port;
-    uint8_t offset;
-} GPIOBYTE;
+typedef struct GPIO_Pin {
+    volatile GPIO_Base_TypeDef * GPIO;
+    uint8_t pin: 4;
+    Optional_7_Bits_TypeDef adc_channel;
+} GPIO_Pin_TypeDef;
 
-typedef struct GPIOHALFWORD {
-    volatile unsigned long * port;
-} GPIOHALFWORD;
+typedef struct GPIO_Byte {
+    volatile GPIO_Base_TypeDef * GPIO;
+    uint8_t offset: 4;
+} GPIO_Byte_TypeDef;
+
+typedef struct GPIO_Port {
+    volatile GPIO_Base_TypeDef * GPIO;
+} GPIO_Port_TypeDef;
 
 
-typedef struct GPIO_CONFIGURATION {
+typedef struct GPIO_Pins_Configuration {
     uint8_t mode;
     uint8_t cnf;
-    GPIO_STATE odr;
-} GPIO_CONFIGURATION;
+    Optional_7_Bits_TypeDef odr;
+} GPIO_Pins_Configuration_TypeDef;
 
-void digitalWrite(GPIO gpio, GPIO_STATE state);
+void GPIO_WritePin(GPIO_Pin_TypeDef pin, GPIO_Level_TypeDef state);
 
-void digitalWriteByte(GPIOBYTE gpiobyte, uint8_t data);
+void GPIO_WriteByte(GPIO_Byte_TypeDef byte, uint8_t data);
 
-void digitalWriteHalfWord(GPIOHALFWORD gpiobyte, unsigned short data);
+void GPIO_WritePort(GPIO_Port_TypeDef port, unsigned short data);
 
-GPIO_STATE digitalRead(GPIO gpio);
+GPIO_Level_TypeDef GPIO_PinRead(GPIO_Pin_TypeDef pin);
 
-uint8_t digitalReadByte(GPIOBYTE gpiobyte);
+uint8_t GPIO_ByteRead(GPIO_Byte_TypeDef byte);
 
-short digitalReadHalfWord(GPIOHALFWORD gpiohalfword);
+short GPIO_PortRead(GPIO_Port_TypeDef port);
 
-void digitalSet(GPIO gpio);
+void GPIO_PinSet(GPIO_Pin_TypeDef pin);
 
-void digitalReset(GPIO gpio);
+void GPIO_PinReset(GPIO_Pin_TypeDef pin);
 
-void pinMode(GPIO, GPIO_CONFIGURATION);
+void GPIO_PinMode(GPIO_Pin_TypeDef pin, GPIO_Pins_Configuration_TypeDef conf);
 
-void pinModeByte(GPIOBYTE, GPIO_CONFIGURATION);
+void GPIO_ByteMode(GPIO_Byte_TypeDef byte, GPIO_Pins_Configuration_TypeDef conf);
 
-void pinModeHalfWord(GPIOHALFWORD, GPIO_CONFIGURATION);
+void GPIO_PortMode(GPIO_Port_TypeDef port, GPIO_Pins_Configuration_TypeDef conf);
 
 
 #endif //C0_GPIO_H

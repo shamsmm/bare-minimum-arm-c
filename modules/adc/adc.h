@@ -24,7 +24,7 @@
 #define ADC_JDR4 18
 #define ADC_DR 19
 
-typedef enum ANALOG_CHANNEL {
+typedef enum ADC_Channel {
     CHANNEL0,
     CHANNEL1,
     CHANNEL2,
@@ -44,7 +44,7 @@ typedef enum ANALOG_CHANNEL {
     CHANNEL16,
     CHANNEL17,
     NC = 100,
-} ANALOG_CHANNEL;
+} ADC_Channel_TypeDef;
 
 typedef struct ADC_CONFIGURATION {
     volatile unsigned long * interface;
@@ -52,6 +52,6 @@ typedef struct ADC_CONFIGURATION {
 
 void enableContinuousADC(ADC_CONFIGURATION conf);
 
-unsigned short analogReadInterface(ADC_CONFIGURATION conf, ANALOG_CHANNEL channel);
+unsigned short analogReadInterface(ADC_CONFIGURATION conf, ADC_Channel_TypeDef channel);
 
 #endif //C0_ADC_H

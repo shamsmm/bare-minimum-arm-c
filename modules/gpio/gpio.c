@@ -1,24 +1,24 @@
 #include "gpio.h"
 
-void pinMode(const struct GPIO gpio, struct GPIO_CONFIGURATION conf) {
-    if (gpio.pin < 8) {
-        *(gpio.port + GPIOx_CRL) &= ~(0b1111 << (gpio.pin * 4));
-        *(gpio.port + GPIOx_CRL) |= (((conf.mode & 0b11) | (conf.cnf & 0b11) << 2) << (gpio.pin * 4));
+void GPIO_PinMode(const GPIO_Pin_TypeDef pin, GPIO_Pins_Configuration_TypeDef conf) {
+    if (pin.pin < 8) {
+        pin.GPIO->CRL &= ~(0b1111 << (pin.pin * 4));
+        pin.GPIO->CRL |= (((conf.mode & 0b11) | (conf.cnf & 0b11) << 2) << (pin.pin * 4));
     } else {
-        *(gpio.port + GPIOx_CRH) &= ~(0b1111 << ((gpio.pin - 8) * 4));
-        *(gpio.port + GPIOx_CRH) |= ((conf.mode & 0b11) | (conf.cnf & 0b11) << 2) << ((gpio.pin - 8) * 4);
+        pin.GPIO->CRH &= ~(0b1111 << ((pin.pin - 8) * 4));
+        pin.GPIO->CRH |= ((conf.mode & 0b11) | (conf.cnf & 0b11) << 2) << ((pin.pin - 8) * 4);
     }
 
     if (conf.mode == GPIO_MODE_INPUT && conf.cnf == GPIO_CNF_INPUT_PULLED_UP_OR_DOWN)
-        digitalWrite(gpio, conf.odr);
+        GPIO_WritePin(pin, conf.odr.value);
 }
 
-void pinModeByte(GPIOBYTE gpiobyte, struct GPIO_CONFIGURATION conf) {
+void GPIO_ByteMode(GPIO_Byte_TypeDef byte, struct GPIO_Pins_Configuration conf) {
     uint8_t pattern = ((conf.mode & 0b11) | (conf.cnf & 0b11) << 2);
 
-    if (gpiobyte.offset != 8) {
-        *(gpiobyte.port + GPIOx_CRL) &= ~(0xFFFFFFFF);
-        *(gpiobyte.port + GPIOx_CRL) |=
+    if (byte.offset != 8) {
+        byte.GPIO->CRL &= ~(0xFFFFFFFF);
+        byte.GPIO->CRL |=
                 pattern << 0 |
                 pattern << 4 |
                 pattern << 8 |
@@ -28,8 +28,8 @@ void pinModeByte(GPIOBYTE gpiobyte, struct GPIO_CONFIGURATION conf) {
                 pattern << 24 |
                 pattern << 28;
     } else {
-        *(gpiobyte.port + GPIOx_CRH) &= ~(0xFFFFFFFF);
-        *(gpiobyte.port + GPIOx_CRH) |=
+        byte.GPIO->CRH &= ~(0xFFFFFFFF);
+        byte.GPIO->CRH |=
                 pattern << 0 |
                 pattern << 4 |
                 pattern << 8 |
@@ -41,19 +41,19 @@ void pinModeByte(GPIOBYTE gpiobyte, struct GPIO_CONFIGURATION conf) {
     }
 
     if (conf.mode == GPIO_MODE_INPUT && conf.cnf == GPIO_CNF_INPUT_PULLED_UP_OR_DOWN){
-        if (conf.odr) {
-            digitalWriteByte(gpiobyte, 0xFF);
+        if (conf.odr.exists) {
+            GPIO_WriteByte(byte, 0xFF);
         } else {
-            digitalWriteByte(gpiobyte, 0x00);
+            GPIO_WriteByte(byte, 0x00);
         }
     }
 }
 
-void pinModeHalfWord(GPIOHALFWORD gpiohalfword, struct GPIO_CONFIGURATION conf) {
+void GPIO_PortMode(GPIO_Port_TypeDef port, struct GPIO_Pins_Configuration conf) {
     uint8_t pattern = ((conf.mode & 0b11) | (conf.cnf & 0b11) << 2);
 
-    *(gpiohalfword.port + GPIOx_CRL) &= ~(0xFFFFFFFF);
-    *(gpiohalfword.port + GPIOx_CRL) |=
+    port.GPIO->CRL &= ~(0xFFFFFFFF);
+    port.GPIO->CRL |=
             pattern << 0 |
             pattern << 4 |
             pattern << 8 |
@@ -63,8 +63,8 @@ void pinModeHalfWord(GPIOHALFWORD gpiohalfword, struct GPIO_CONFIGURATION conf) 
             pattern << 24 |
             pattern << 28;
 
-    *(gpiohalfword.port + GPIOx_CRH) &= ~(0xFFFFFFFF);
-    *(gpiohalfword.port + GPIOx_CRH) |=
+    port.GPIO->CRH &= ~(0xFFFFFFFF);
+    port.GPIO->CRH |=
             pattern << 0 |
             pattern << 4 |
             pattern << 8 |
@@ -75,48 +75,51 @@ void pinModeHalfWord(GPIOHALFWORD gpiohalfword, struct GPIO_CONFIGURATION conf) 
             pattern << 28;
 
     if (conf.mode == GPIO_MODE_INPUT && conf.cnf == GPIO_CNF_INPUT_PULLED_UP_OR_DOWN) {
-        if (conf.odr) {
-            digitalWriteHalfWord(gpiohalfword, 0xFFFF);
+        if (conf.odr.exists) {
+            GPIO_WritePort(port, 0xFFFF);
         } else {
-            digitalWriteHalfWord(gpiohalfword, 0x0000);
+            GPIO_WritePort(port, 0x0000);
         }
     }
 }
 
-void digitalWriteHalfWord(GPIOHALFWORD gpiohalfword, unsigned short data) {
-    *(gpiohalfword.port + GPIOx_ODR) = data;
+void GPIO_WritePort(GPIO_Port_TypeDef port, unsigned short data) {
+    port.GPIO->ODR = data;
 }
 
-void digitalWriteByte(GPIOBYTE gpiobyte, uint8_t data) {
-    *(gpiobyte.port + GPIOx_ODR) = (*(gpiobyte.port + GPIOx_ODR) & (~(0xFF) << gpiobyte.offset)) | (data << gpiobyte.offset);
-}
-
-
-void digitalWrite(GPIO gpio, GPIO_STATE state) {
-//    *(gpio.port + GPIOx_ODR) &= ~(0x1) << gpio.pin;
-//    *(gpio.port + GPIOx_ODR) |= (state != 0) << gpio.pin;
-    *(gpio.port + GPIOx_ODR) = (*(gpio.port + GPIOx_ODR) & ~(0x1) << gpio.pin) | ((state != 0) << gpio.pin);
-}
-
-GPIO_STATE digitalRead(GPIO gpio) {
-    return (*(gpio.port + GPIOx_IDR) & (1 << gpio.pin)) != 0 ? HIGH : LOW;
-}
-
-uint8_t digitalReadByte(GPIOBYTE gpiobyte) {
-    return (uint8_t) ((*(gpiobyte.port + GPIOx_IDR) >> gpiobyte.offset) & (0xFF));
-}
-
-short digitalReadHalfWord(GPIOHALFWORD gpiohalfword) {
-    return (short) (*(gpiohalfword.port + GPIOx_IDR) & (0xFFFF));
-}
-
-void digitalSet(struct GPIO gpio) {
-    *(gpio.port + GPIOx_BSRR) = 1 << gpio.pin;
-}
-
-void digitalReset(struct GPIO gpio) {
-    *(gpio.port + GPIOx_BSRR) = 1 << gpio.pin << 16;
+void GPIO_WriteByte(GPIO_Byte_TypeDef byte, uint8_t data) {
+    byte.GPIO->ODR = (byte.GPIO->ODR & (~(0xFF) << byte.offset)) | (data << byte.offset);
 }
 
 
+void GPIO_WritePin(GPIO_Pin_TypeDef pin, GPIO_Level_TypeDef state) {
+    switch (state) {
+        case HIGH:
+            GPIO_PinSet(pin);
+            break;
+        case LOW:
+            GPIO_PinReset(pin);
+            break;
+    }
+}
+
+GPIO_Level_TypeDef GPIO_PinRead(GPIO_Pin_TypeDef pin) {
+    return (pin.GPIO->IDR & (1 << pin.pin)) != 0 ? HIGH : LOW;
+}
+
+uint8_t GPIO_ByteRead(GPIO_Byte_TypeDef byte) {
+    return (uint8_t) ((byte.GPIO->IDR >> byte.offset) & (0xFF));
+}
+
+short GPIO_PortRead(GPIO_Port_TypeDef port) {
+    return (short) (port.GPIO->IDR & (0xFFFF));
+}
+
+void GPIO_PinSet(GPIO_Pin_TypeDef pin) {
+    pin.GPIO->BSRR = 1 << pin.pin;
+}
+
+void GPIO_PinReset(GPIO_Pin_TypeDef pin) {
+    pin.GPIO->BSRR = 1 << pin.pin << 16;
+}
 

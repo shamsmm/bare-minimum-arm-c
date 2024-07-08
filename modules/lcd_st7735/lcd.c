@@ -93,30 +93,30 @@ uint8_t _ystart;
 
 void ST7735_Select()
 {
-    digitalWrite(CS_PIN, LOW);
+    GPIO_WritePin(CS_PIN, LOW);
 }
 
 void ST7735_Unselect()
 {
-    digitalWrite(CS_PIN, HIGH);
+    GPIO_WritePin(CS_PIN, HIGH);
 }
 
 void ST7735_Reset()
 {
-    digitalWrite(RST_PIN, LOW);
+    GPIO_WritePin(RST_PIN, LOW);
     delay(5);
-    digitalWrite(RST_PIN, HIGH);
+    GPIO_WritePin(RST_PIN, HIGH);
 }
 
 void ST7735_WriteCommand(uint8_t cmd)
 {
-    digitalWrite(DC_PIN, LOW);
+    GPIO_WritePin(DC_PIN, LOW);
     SPI_Transmit_Byte(SPI1, cmd);
 }
 
 void ST7735_WriteData(uint8_t* buff, size_t buff_size)
 {
-    digitalWrite(DC_PIN, HIGH);
+    GPIO_WritePin(DC_PIN, HIGH);
     SPI_Transmit_Bytes(SPI1, buff, buff_size);
 }
 
@@ -321,7 +321,7 @@ void ST7735_FillRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16
     ST7735_SetAddressWindow(x, y, x+w-1, y+h-1);
 
     uint8_t data[] = { color >> 8, color & 0xFF };
-    digitalWrite( DC_PIN, HIGH);
+    GPIO_WritePin(DC_PIN, HIGH);
     for(y = h; y > 0; y--) {
         for(x = w; x > 0; x--) {
             SPI_Transmit_Bytes(SPI1, data, sizeof(data));
