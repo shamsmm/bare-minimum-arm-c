@@ -1,3 +1,5 @@
+#include <malloc.h>
+#include <stdio.h>
 #include "main.h"
 #include "gpio.h"
 #include "rcc.h"
@@ -54,7 +56,7 @@ void main() {
     delay(100);
 
     SPI1->CR1.MSTR = 1;
-    SPI1->CR1.BR = 3;
+    SPI1->CR1.BR = 0;
     SPI1->CR1.BIDIMODE = 1;
     SPI1->CR1.BIDIOE = 1;
     SPI1->CR1.SSI = 1;
@@ -67,8 +69,14 @@ void main() {
     fillScreen(BLACK);
 
     digitalWrite(PC13, HIGH);
+    int z = 0;
+    char * koko = (char *) malloc(sizeof(char) * 10);
+
+    printf("The number is: %d", 10, koko,  z++);
     while(1) {
-        ST7735_WriteString(0, 0, "HELLO", Font_11x18, RED,BLACK);
-        delay(500);
+
+        ST7735_SetRotation(0);
+        ST7735_WriteString(0, 0, "zzz", Font_11x18, RED,BLACK);
+        fillScreen(BLACK);
     }
 }

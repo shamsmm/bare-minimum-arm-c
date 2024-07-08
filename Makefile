@@ -22,7 +22,7 @@ BINDIR = build
 
 TARGET = $(BINDIR)/main.elf
 
-CFLAGS=-ggdb -mthumb -mcpu=cortex-m3 -O0 $(INCLUDES)
+CFLAGS=-ggdb -mthumb -mcpu=cortex-m3 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage $(INCLUDES)
 ASMFLAGS=-ggdb -mthumb -mcpu=cortex-m3
 
 all: $(TARGET)
@@ -30,8 +30,8 @@ all: $(TARGET)
 flash: $(TARGET)
 	openocd -f stlink.cfg -c "program $(TARGET) verify reset exit"
 
-$(TARGET): clean $(OBJ)
-	$(CC) $(CFLAGS) -Tstm32f103.ld -o $(TARGET) $(addprefix $(BINDIR)/, $(OBJ))
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -nostartfiles -Tstm32f103.ld -o $(TARGET) $(addprefix $(BINDIR)/, $(OBJ))
 
 %.o: %.c
 	@mkdir -p $(dir $(BINDIR)/$@)
