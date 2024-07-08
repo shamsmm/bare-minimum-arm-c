@@ -1,7 +1,7 @@
 #ifndef C0_ADC_H
 #define C0_ADC_H
 
-#include "gpio.h"
+#include "gpio/gpio.h"
 
 #define ADC_SR 0
 #define ADC_CR1 1

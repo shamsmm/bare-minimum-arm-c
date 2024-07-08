@@ -1,10 +1,10 @@
 #ifndef C0_BLUEPILL_H
 #define C0_BLUEPILL_H
 
-#include "gpio.h"
-#include "rcc.h"
-#include "adc.h"
-#include "uart.h"
+#include "gpio/gpio.h"
+#include "rcc/rcc.h"
+#include "adc/adc.h"
+#include "uart/uart.h"
 
 #define PORTA (volatile unsigned long *) 0x40010800
 #define PORTB (volatile unsigned long *) 0x40010C00

@@ -3,20 +3,18 @@ PROJECTNAME = EasyLibrary
 TOOLCHAIN=arm-none-eabi
 CC=$(TOOLCHAIN)-gcc
 
-INCDIR = inc $(wildcard modules/*/inc)
-SRCDIR = src $(wildcard modules/*/src)
+INCDIR = src src/inc modules/
+SRCDIR = src $(wildcard modules/*/src) $(wildcard modules/*)
 
 INCLUDES = $(addprefix -I, $(INCDIR))
 
-SRC = $(wildcard modules/*/src/*.c)
+SRC = $(wildcard modules/*/*.c)
+SRC += $(wildcard modules/*/src/*.c)
 SRC += $(wildcard src/*.c)
 SRC += $(wildcard src/*.s)
 
 OBJ = $(SRC:.c=.o)
 
-vpath %.c $(SRCDIR)
-vpath %.s $(SRCDIR)
-vpath %.h $(INCDIR)
 
 BINDIR = build
 

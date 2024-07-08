@@ -1,9 +1,9 @@
 #ifndef __ST7735_H__
 #define __ST7735_H__
 
-#include "lcd_st7735/fonts.h"
 #include <stdbool.h>
-#include "../../bluepill/inc/bluepill.h"
+#include "graphics/fonts.h"
+#include "bluepill/bluepill.h"
 
 /****** PIN DEFINES ******/
 

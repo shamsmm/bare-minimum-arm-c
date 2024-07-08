@@ -1,9 +1,9 @@
-#include "../inc/lcd_st7735.h"
+#include "lcd.h"
 #include <stdint.h>
 #include <stddef.h>
-#include "gpio.h"
-#include "systick.h"
-#include "spi.h"
+#include "../gpio/gpio.h"
+#include "../timer/systick.h"
+#include "../spi/spi.h"
 
 int16_t _width;       ///< Display width as modified by current rotation
 int16_t _height;      ///< Display height as modified by current rotation

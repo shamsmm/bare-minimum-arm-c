@@ -1,7 +1,7 @@
 #ifndef C0_LCD_1602_H
 #define C0_LCD_1602_H
 
-#include "i2c.h"
+#include "../i2c/i2c.h"
 
 extern void delay(int);
 

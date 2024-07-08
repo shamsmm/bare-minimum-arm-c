@@ -1,4 +1,4 @@
-#include "../inc/lcd_1602.h"
+#include "lcd.h"
 #define LCD_1602_EN (1 << 2)
 #define LCD_1602_RS (1 << 0)
 

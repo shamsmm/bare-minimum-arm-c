@@ -1,16 +1,15 @@
 #include <malloc.h>
 #include <stdio.h>
-#include "main.h"
-#include "gpio.h"
-#include "rcc.h"
-#include "../modules/bluepill/inc/bluepill.h"
-#include "../modules/oled_ssd1306/inc/oled.h"
-#include "../modules/timer/inc/systick.h"
-#include "../modules/lcd_1602/inc/lcd_1602.h"
-#include "../modules/adc/inc/adc.h"
-#include "spi.h"
-#include "../modules/lcd_st7735/inc/lcd_st7735.h"
-#include "../modules/lcd_st7735/inc/lcd_st7735/gfx.h"
+
+#include "gpio/gpio.h"
+#include "rcc/rcc.h"
+#include "bluepill/bluepill.h"
+#include "oled_ssd1306/oled.h"
+#include "timer/systick.h"
+#include "adc/adc.h"
+#include "spi/spi.h"
+#include "lcd_st7735/lcd.h"
+#include "lcd_st7735/graphics/gfx.h"
 
 //#define SYSTICK_CLKSOURCE_EXTERNAL
 #define SYSTICK_CLKSOURCE_INTERNAL

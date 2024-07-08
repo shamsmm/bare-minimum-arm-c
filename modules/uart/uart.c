@@ -1,5 +1,5 @@
-#include "../inc/uart.h"
-#include "rcc.h"
+#include "uart.h"
+#include "rcc/rcc.h"
 
 #define UE 13
 #define TE 3

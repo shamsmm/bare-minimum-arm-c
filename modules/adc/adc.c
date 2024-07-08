@@ -1,5 +1,4 @@
-#include "../inc/adc.h"
-#include "gpio.h"
+#include "adc.h"
 
 #define ADON 1 << 0
 #define CONT 1 << 1

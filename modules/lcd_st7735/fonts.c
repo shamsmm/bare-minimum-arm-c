@@ -1,4 +1,4 @@
-#include "lcd_st7735/fonts.h"
+#include "graphics/fonts.h"
 
 static const uint16_t Font7x10 [] = {
 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,  // sp
