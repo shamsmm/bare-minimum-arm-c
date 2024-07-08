@@ -22,7 +22,7 @@ BINDIR = build
 
 TARGET = $(BINDIR)/main.elf
 
-CFLAGS=-ggdb -mthumb -mcpu=cortex-m3 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage $(INCLUDES)
+CFLAGS=-ggdb -mthumb -mcpu=cortex-m3 -O0 -ffreestanding $(INCLUDES)
 ASMFLAGS=-ggdb -mthumb -mcpu=cortex-m3
 
 all: $(TARGET)

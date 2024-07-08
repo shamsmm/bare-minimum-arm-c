@@ -72,11 +72,11 @@ void main() {
     int z = 0;
     char * koko = (char *) malloc(sizeof(char) * 10);
 
-    printf("The number is: %d", 10, koko,  z++);
+    sprintf(koko, "Abood: %.2f",  11.63);
     while(1) {
 
         ST7735_SetRotation(0);
-        ST7735_WriteString(0, 0, "zzz", Font_11x18, RED,BLACK);
+        ST7735_WriteString(0, 0, koko, Font_11x18, RED,BLACK);
         fillScreen(BLACK);
     }
 }
