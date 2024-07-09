@@ -8,6 +8,8 @@
 #include "spi/spi.h"
 #include "lcd_st7735/lcd.h"
 #include "lcd_st7735/graphics/gfx.h"
+#include "os/os.h"
+#include "system/system.h"
 
 //#define SYSTICK_CLKSOURCE_EXTERNAL
 #define SYSTICK_CLKSOURCE_INTERNAL
@@ -17,6 +19,7 @@ volatile unsigned long Tick = 0;
 // duration is in number of nop instructions, not time
 void SysTickHandler() {
     Tick++;
+    os_task_scheduler();
 }
 
 void delay(int milliseconds) {
@@ -66,14 +69,11 @@ void main() {
     fillScreen(BLACK);
 
     GPIO_WritePin(PC13, HIGH);
-    int z = 0;
-    char * koko = (char *) malloc(sizeof(char) * 10);
 
-    sprintf(koko, "Abood: %.2f",  11.63);
-    while(1) {
+    os_init_task();
 
-        ST7735_SetRotation(0);
-        ST7735_WriteString(0, 0, koko, Font_11x18, RED,BLACK);
-        fillScreen(BLACK);
+        __asm__ volatile ("svc %0" : : "I" (0));
+
+    while (1) {
     }
 }
