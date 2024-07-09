@@ -4,6 +4,8 @@
 #define TASK_COUNT 2
 #define TASK_STACK_SIZE 256
 
+extern volatile uint32_t Tick;
+
 typedef struct TCB {
     uint32_t *stack_pointer;
     // Add other task-specific data here

@@ -9,22 +9,13 @@
 #include "lcd_st7735/lcd.h"
 #include "lcd_st7735/graphics/gfx.h"
 #include "os/os.h"
-#include "system/system.h"
 
 //#define SYSTICK_CLKSOURCE_EXTERNAL
 #define SYSTICK_CLKSOURCE_INTERNAL
 
-volatile unsigned long Tick = 0;
-
-// duration is in number of nop instructions, not time
-void SysTickHandler() {
-    Tick++;
-    os_task_scheduler();
-}
-
 void delay(int milliseconds) {
     unsigned long initial = Tick;
-    while (Tick - initial < milliseconds);
+    while (Tick - initial < milliseconds/10);
 }
 
 void main() {
@@ -34,7 +25,7 @@ void main() {
     SysTickReloadValue = 8000; // Clock source is external 8MHz
 #elif defined(SYSTICK_CLKSOURCE_INTERNAL)
     SysTickControlAndStatus->CLKSOURCE = 1;
-    SysTickReloadValue = 64000; // Clock source is AHB which is 64MHz
+    SysTickReloadValue = 640000; // Clock source is AHB which is 64MHz
 #endif
     SysTickControlAndStatus->TICKINT = 1;
     SysTickControlAndStatus->ENABLE = 1;
