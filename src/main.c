@@ -9,6 +9,7 @@
 #include "lcd_st7735/lcd.h"
 #include "lcd_st7735/graphics/gfx.h"
 #include "os/os.h"
+#include "mpu/mpu.h"
 
 //#define SYSTICK_CLKSOURCE_EXTERNAL
 #define SYSTICK_CLKSOURCE_INTERNAL
@@ -61,9 +62,31 @@ void main() {
 
     GPIO_WritePin(PC13, HIGH);
 
-    os_init_task();
+    uint32_t *pSHCSR = (uint32_t*)0xE000ED24;
 
-        __asm__ volatile ("svc %0" : : "I" (0));
+    *pSHCSR |= ( 1 << 16); //mem manage
+    *pSHCSR |= ( 1 << 17); //bus fault
+    *pSHCSR |= ( 1 << 18); //usage fault
+
+    // Enable the MPU
+    MPU->CTRL = 0;
+
+    // Configure the region for the peripheral access
+    MPU->RNR = 0;
+    MPU->RBAR = 0x40000000; // Base address of the peripheral space
+    MPU->RASR = (0x3 << 24) | // Full access
+                (0x1 << 19) | // Enable the region
+                (0x0 << 8)  | // Memory type: Normal
+                (0x0 << 4)  | // Sub-region disabled
+                (0x7 << 1)  | // Size = 512MB (Peripheral space)
+                (0x1 << 0);   // Enable region
+
+    // Enable the MPU, use the default memory map as background
+    MPU->CTRL = 1 << 2 | 1 << 0;
+
+    __asm__ volatile ("svc %0" : : "I" (0));
+
+    os_init_task();
 
     while (1) {
     }
