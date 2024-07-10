@@ -12,32 +12,42 @@ TCB_TypeDef tasks[TASK_COUNT];
 /*_Alignas(8) */uint32_t task1_stack[TASK_STACK_SIZE];
 /*_Alignas(8) */uint32_t task2_stack[TASK_STACK_SIZE];
 
+static inline void os_schedule() {
+    *((volatile uint32_t *)0xE000ED04) = 0x10000000;
+}
+
 void SysTickHandler() {
     Tick++;
 
     if (os_start_scheduler)
-        *((volatile uint32_t *)0xE000ED04) = 0x10000000;
+        os_schedule();
 }
 
 void task1() {
     volatile uint32_t a = 0xAAAAAAAA;
     while(1) {
-        __asm__ volatile ("svc %0" : : "I" (1));
+        //__asm__ volatile ("svc %0" : : "I" (1));
+        os_start_scheduler = 0;
         fillScreen(BLACK);
         ST7735_SetRotation(0);
         ST7735_WriteString(0, 0, "task1", Font_11x18, RED,BLACK);
-        __asm__ volatile ("svc %0" : : "I" (2));
+        //__asm__ volatile ("svc %0" : : "I" (2));
+        os_start_scheduler = 1;
+        os_schedule();
     }
 }
 
 void task2() {
     volatile uint32_t a = 0xAAAAAAAA;
     while(1) {
-        __asm__ volatile ("svc %0" : : "I" (1));
+        //__asm__ volatile ("svc %0" : : "I" (1));
+        os_start_scheduler = 0;
         fillScreen(BLACK);
         ST7735_SetRotation(0);
         ST7735_WriteString(0, 19, "task2", Font_11x18, RED,BLACK);
-        __asm__ volatile ("svc %0" : : "I" (2));
+        //__asm__ volatile ("svc %0" : : "I" (2));
+        os_start_scheduler = 1;
+        os_schedule();
     }
 }
 
@@ -57,15 +67,18 @@ void os_init_task() {
     os_start_scheduler = 1;
 }
 
-static inline uint32_t __get_PSP(void) {
-    uint32_t result;
-    __asm__ volatile ("mrs %0, psp" : "=r" (result) );
-    return result;
-}
-
 void SVCHandler() {
-    uint32_t *stacked_pc = (uint32_t *) __get_PSP();
-    uint8_t svc_number = ((uint8_t *) stacked_pc[-1])[-2];
+    uint32_t *stacked_pc;
+
+    __asm volatile (
+            "TST lr, #4\n"              // Test EXC_RETURN bit 2 (to determine if the context is in main or process stack)
+            "ITE EQ\n"                  // If-Then-Else block
+            "MRSEQ %0, MSP\n"           // If equal, load MSP (Main Stack Pointer) into r0
+            "MRSNE %0, PSP\n"           // If not equal, load PSP (Process Stack Pointer) into r0
+            : "=r" (stacked_pc)
+    );
+
+    uint8_t svc_number = ((uint8_t *) stacked_pc[6])[-2] & 0xFF;
 
     switch (svc_number) {
         case 0:
