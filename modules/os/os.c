@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdio.h>
 #include "os.h"
 #include "system/system.h"
 #include "lcd_st7735/lcd.h"
@@ -9,8 +10,9 @@ uint8_t current_task = 255;
 uint8_t os_start_scheduler = 0;
 TCB_TypeDef tasks[TASK_COUNT];
 
-/*_Alignas(8) */uint32_t task1_stack[TASK_STACK_SIZE];
-/*_Alignas(8) */uint32_t task2_stack[TASK_STACK_SIZE];
+_Alignas(8) uint32_t task1_stack[TASK_STACK_SIZE];
+_Alignas(8) uint32_t task2_stack[TASK_STACK_SIZE];
+_Alignas(8) uint32_t task3_stack[TASK_STACK_SIZE];
 
 static inline void os_schedule() {
     *((volatile uint32_t *)0xE000ED04) = 0x10000000;
@@ -24,28 +26,42 @@ void SysTickHandler() {
 }
 
 void task1() {
-    volatile uint32_t a = 0xAAAAAAAA;
+    uint16_t counter = 0;
+    char buffer[100];
+
     while(1) {
-        //__asm__ volatile ("svc %0" : : "I" (1));
         os_start_scheduler = 0;
-        fillScreen(BLACK);
+        sprintf(buffer, "T1: %05u", counter++);
         ST7735_SetRotation(0);
-        ST7735_WriteString(0, 0, "task1", Font_11x18, RED,BLACK);
-        //__asm__ volatile ("svc %0" : : "I" (2));
+        ST7735_WriteString(0, 0, buffer, Font_11x18, RED,BLACK);
         os_start_scheduler = 1;
         os_schedule();
     }
 }
 
 void task2() {
-    volatile uint32_t a = 0xAAAAAAAA;
+    uint16_t counter = 0;
+    char buffer[100];
+
     while(1) {
-        //__asm__ volatile ("svc %0" : : "I" (1));
         os_start_scheduler = 0;
-        fillScreen(BLACK);
+        sprintf(buffer, "T2: %05u", counter++);
         ST7735_SetRotation(0);
-        ST7735_WriteString(0, 19, "task2", Font_11x18, RED,BLACK);
-        //__asm__ volatile ("svc %0" : : "I" (2));
+        ST7735_WriteString(0, 18 + 1, buffer, Font_11x18, RED,BLACK);
+        os_start_scheduler = 1;
+        os_schedule();
+    }
+}
+
+void task3() {
+    uint16_t counter = 0;
+    char buffer[100];
+
+    while(1) {
+        os_start_scheduler = 0;
+        sprintf(buffer, "T3: %05u", counter++);
+        ST7735_SetRotation(0);
+        ST7735_WriteString(0, 18 * 2 + 1, buffer, Font_11x18, RED,BLACK);
         os_start_scheduler = 1;
         os_schedule();
     }
@@ -62,7 +78,12 @@ void os_init_task() {
     task2_stack[TASK_STACK_SIZE - 1] = 0x01000000;  // xPSR (Thumb state)
     task2_stack[TASK_STACK_SIZE - 2] = (uint32_t) task2 & ~0x01UL;  // PC (task entry point)
     task2_stack[TASK_STACK_SIZE - 3] = (uint32_t) 0xFFFFFFFD;  // LR (return to thread mode with PSP)
-    tasks[1].stack_pointer = &task2_stack[TASK_STACK_SIZE - 16];  // Initial stack pointer
+    tasks[1].stack_pointer = &task2_stack[TASK_STACK_SIZE - 16];  // Initial stack pointer// Initialize task2 stack and context
+
+    task3_stack[TASK_STACK_SIZE - 1] = 0x01000000;  // xPSR (Thumb state)
+    task3_stack[TASK_STACK_SIZE - 2] = (uint32_t) task3 & ~0x01UL;  // PC (task entry point)
+    task3_stack[TASK_STACK_SIZE - 3] = (uint32_t) 0xFFFFFFFD;  // LR (return to thread mode with PSP)
+    tasks[2].stack_pointer = &task3_stack[TASK_STACK_SIZE - 16];  // Initial stack pointer
 
     os_start_scheduler = 1;
 }
