@@ -9,8 +9,8 @@ uint8_t current_task = 255;
 uint8_t os_start_scheduler = 0;
 TCB_TypeDef tasks[TASK_COUNT];
 
-_Alignas(8) uint32_t task1_stack[TASK_STACK_SIZE];
-_Alignas(8) uint32_t task2_stack[TASK_STACK_SIZE];
+/*_Alignas(8) */uint32_t task1_stack[TASK_STACK_SIZE];
+/*_Alignas(8) */uint32_t task2_stack[TASK_STACK_SIZE];
 
 void SysTickHandler() {
     Tick++;
@@ -22,18 +22,22 @@ void SysTickHandler() {
 void task1() {
     volatile uint32_t a = 0xAAAAAAAA;
     while(1) {
+        __asm__ volatile ("svc %0" : : "I" (1));
         fillScreen(BLACK);
         ST7735_SetRotation(0);
         ST7735_WriteString(0, 0, "task1", Font_11x18, RED,BLACK);
+        __asm__ volatile ("svc %0" : : "I" (2));
     }
 }
 
 void task2() {
     volatile uint32_t a = 0xAAAAAAAA;
     while(1) {
+        __asm__ volatile ("svc %0" : : "I" (1));
         fillScreen(BLACK);
         ST7735_SetRotation(0);
         ST7735_WriteString(0, 19, "task2", Font_11x18, RED,BLACK);
+        __asm__ volatile ("svc %0" : : "I" (2));
     }
 }
 
@@ -53,10 +57,31 @@ void os_init_task() {
     os_start_scheduler = 1;
 }
 
+static inline uint32_t __get_PSP(void) {
+    uint32_t result;
+    __asm__ volatile ("mrs %0, psp" : "=r" (result) );
+    return result;
+}
+
 void SVCHandler() {
-    __asm__ volatile ("msr psp, %0" : : "r" (tasks[current_task].stack_pointer));
-    __asm__ volatile ("msr control, %0" : : "r" (0x2)); // Switch to use PSP
-    __asm__ volatile ("isb");
+    uint32_t *stacked_pc = (uint32_t *) __get_PSP();
+    uint8_t svc_number = ((uint8_t *) stacked_pc[-1])[-2];
+
+    switch (svc_number) {
+        case 0:
+            __asm__ volatile ("msr psp, %0" : : "r" (tasks[current_task].stack_pointer));
+            __asm__ volatile ("msr control, %0" : : "r" (0x2)); // Switch to use PSP
+            __asm__ volatile ("isb");
+            return;
+        case 1:
+            __asm__ volatile ("cpsid i");
+            return;
+        case 2:
+            __asm__ volatile ("cpsie i");
+            return;
+        default:
+            break;
+    }
 }
 
 void PendSVC() {
