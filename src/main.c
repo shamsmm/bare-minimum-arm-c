@@ -85,7 +85,7 @@ void main() {
     MPU->CTRL = 1 << 2 | 1 << 0;
 
 
-    os_init_task();
+    os_init_tasks();
     __asm__ volatile ("svc %0" : : "I" (0));
 
     while (1) {

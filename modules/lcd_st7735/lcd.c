@@ -4,6 +4,7 @@
 #include "../gpio/gpio.h"
 #include "../timer/systick.h"
 #include "../spi/spi.h"
+#include "os/os.h"
 
 int16_t _width;       ///< Display width as modified by current rotation
 int16_t _height;      ///< Display height as modified by current rotation
@@ -248,12 +249,12 @@ void ST7735_SetRotation(uint8_t m)
     break;
   }
 
-    __asm__ volatile ("cpsid i");
+  OS_TASK_LOCK();
   ST7735_Select();
   ST7735_WriteCommand(ST7735_MADCTL);
   ST7735_WriteData(&madctl,1);
   ST7735_Unselect();
-    __asm__ volatile ("cpsie i");
+  OS_TASK_UNLOCK();
 }
 
 void ST7735_DrawPixel(uint16_t x, uint16_t y, uint16_t color) {
@@ -289,7 +290,7 @@ void ST7735_WriteChar(uint16_t x, uint16_t y, char ch, FontDef font, uint16_t co
 }
 
 void ST7735_WriteString(uint16_t x, uint16_t y, const char* str, FontDef font, uint16_t color, uint16_t bgcolor) {
-    __asm__ volatile ("cpsid i");
+    OS_TASK_LOCK();
     ST7735_Select();
 
     while(*str) {
@@ -313,7 +314,7 @@ void ST7735_WriteString(uint16_t x, uint16_t y, const char* str, FontDef font, u
     }
 
     ST7735_Unselect();
-    __asm__ volatile ("cpsie i");
+    OS_TASK_UNLOCK();
 }
 
 void ST7735_FillRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
