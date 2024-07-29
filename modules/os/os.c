@@ -90,29 +90,5 @@ void SVCHandler() {
     __asm__ volatile ("bx r0");
 }
 
-void PendSVC() {
-    // Save the current task context
-    __asm__ volatile ("mrs %0, psp" : "=r" (tasks[current_task].stack_pointer));
-    __asm__ volatile (
-            "stmdb %0!, {r4-r11}"  // Store multiple registers onto the stack and update stack pointer
-            : "=r" (tasks[current_task].stack_pointer)   // Output operand
-            : "r" (tasks[current_task].stack_pointer)    // Input operand
-            : "memory"             // Clobbered memory
-            );
-
-    // Loop over the two tasks
-    current_task = (current_task + 1) % TASK_COUNT;
-
-    // Restore the next task context
-    __asm__ volatile (
-            "ldmia %0!, {r4-r11}"  // Load multiple registers from the stack and update stack pointer
-            : "=r" (tasks[current_task].stack_pointer)        // Output operand
-            : "r" (tasks[current_task].stack_pointer)         // Input operand
-            : "memory"             // Clobbered memory
-            );
-    __asm__ volatile ("msr psp, %0" : : "r" (tasks[current_task].stack_pointer));
-
-    __asm__ volatile ("ldr r0, =0xFFFFFFFD");
-
-    __asm__ volatile ("bx r0");
+void PendSVC2() {
 }

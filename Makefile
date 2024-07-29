@@ -9,12 +9,13 @@ SRCDIR = src $(wildcard modules/*/src) $(wildcard modules/*)
 INCLUDES = $(addprefix -I, $(INCDIR))
 
 SRC = $(wildcard modules/*/*.c)
+SRC += $(wildcard modules/*/*.s)
 SRC += $(wildcard modules/*/src/*.c)
 SRC += $(wildcard src/*.c)
 SRC += $(wildcard src/*.s)
 
 OBJ = $(SRC:.c=.o)
-
+OBJ := $(OBJ:.s=.o)
 
 BINDIR = build
 
