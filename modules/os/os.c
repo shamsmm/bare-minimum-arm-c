@@ -6,7 +6,7 @@
 #include "lcd_st7735/graphics/gfx.h"
 
 volatile uint32_t Tick = 0;
-uint8_t current_task = 255;
+uint8_t current_task = 0;
 uint8_t os_start_scheduler = 0;
 TCB_TypeDef tasks[TASK_COUNT];
 
@@ -66,18 +66,18 @@ void os_init_task() {
     task1_stack[TASK_STACK_SIZE - 1] = 0x01000000;  // xPSR (Thumb state)
     task1_stack[TASK_STACK_SIZE - 2] = (uint32_t) task1 & ~0x01UL;  // PC (task entry point)
     task1_stack[TASK_STACK_SIZE - 3] = (uint32_t) 0xFFFFFFFD;  // LR (return to thread mode with PSP)
-    tasks[0].stack_pointer = &task1_stack[TASK_STACK_SIZE - 16];  // Initial stack pointer
+    tasks[0].stack_pointer = &task1_stack[TASK_STACK_SIZE - 8];  // Initial stack pointer
 
     // Initialize task2 stack and context
     task2_stack[TASK_STACK_SIZE - 1] = 0x01000000;  // xPSR (Thumb state)
     task2_stack[TASK_STACK_SIZE - 2] = (uint32_t) task2 & ~0x01UL;  // PC (task entry point)
     task2_stack[TASK_STACK_SIZE - 3] = (uint32_t) 0xFFFFFFFD;  // LR (return to thread mode with PSP)
-    tasks[1].stack_pointer = &task2_stack[TASK_STACK_SIZE - 16];  // Initial stack pointer// Initialize task2 stack and context
+    tasks[1].stack_pointer = &task2_stack[TASK_STACK_SIZE - 8 - 8];  // Initial stack pointer// Initialize task2 stack and context
 
     task3_stack[TASK_STACK_SIZE - 1] = 0x01000000;  // xPSR (Thumb state)
     task3_stack[TASK_STACK_SIZE - 2] = (uint32_t) task3 & ~0x01UL;  // PC (task entry point)
     task3_stack[TASK_STACK_SIZE - 3] = (uint32_t) 0xFFFFFFFD;  // LR (return to thread mode with PSP)
-    tasks[2].stack_pointer = &task3_stack[TASK_STACK_SIZE - 16];  // Initial stack pointer
+    tasks[2].stack_pointer = &task3_stack[TASK_STACK_SIZE - 8 - 8];  // Initial stack pointer
 
     os_start_scheduler = 1;
 }
@@ -92,17 +92,13 @@ void SVCHandler() {
 
 void PendSVC() {
     // Save the current task context
-    if (current_task == 255) {
-        current_task = 1;
-    } else {
-        __asm__ volatile ("mrs %0, psp" : "=r" (tasks[current_task].stack_pointer));
-        __asm__ volatile (
-                "stmdb %0!, {r4-r11}"  // Store multiple registers onto the stack and update stack pointer
-                : "=r" (tasks[current_task].stack_pointer)   // Output operand
-                : "r" (tasks[current_task].stack_pointer)    // Input operand
-                : "memory"             // Clobbered memory
-                );
-    }
+    __asm__ volatile ("mrs %0, psp" : "=r" (tasks[current_task].stack_pointer));
+    __asm__ volatile (
+            "stmdb %0!, {r4-r11}"  // Store multiple registers onto the stack and update stack pointer
+            : "=r" (tasks[current_task].stack_pointer)   // Output operand
+            : "r" (tasks[current_task].stack_pointer)    // Input operand
+            : "memory"             // Clobbered memory
+            );
 
     // Loop over the two tasks
     current_task = (current_task + 1) % TASK_COUNT;

@@ -7,7 +7,7 @@
 extern volatile uint32_t Tick;
 
 typedef struct TCB {
-    uint32_t *stack_pointer;
+    volatile uint32_t * stack_pointer;
     // Add other task-specific data here
 } TCB_TypeDef;
 
