@@ -14,8 +14,13 @@ _Alignas(8) uint32_t task1_stack[TASK_STACK_SIZE];
 _Alignas(8) uint32_t task2_stack[TASK_STACK_SIZE];
 _Alignas(8) uint32_t task3_stack[TASK_STACK_SIZE];
 
-uint32_t os_next_task() {
-    return 0;
+uint32_t ** os_current_task_sp() {
+    return &tasks[current_task].stack_pointer;
+}
+
+uint32_t ** os_next_task_sp() {
+    current_task = (current_task + 1) % TASK_COUNT;
+    return os_current_task_sp();
 }
 
 static inline void os_schedule() {
