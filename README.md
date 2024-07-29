@@ -1,4 +1,4 @@
-# Bare Minimum Assembly, Embedded-C and Makefile To Get Started With ARM
+# Bare Minimum Structure and Libraries (implemented from scratch), to get started with ARM (includes custom RTOS!)
 ## What is this
 This repository contains the bare minimum to get started with the STM32F103XX microcontroller *embedded-c programming*, which features a Cortex-M3 ARM processor.
 
