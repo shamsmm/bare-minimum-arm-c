@@ -20,9 +20,6 @@ static inline void os_schedule() {
 
 void SysTickHandler() {
     Tick++;
-
-    if (os_start_scheduler)
-        os_schedule();
 }
 
 void task1() {
@@ -30,11 +27,9 @@ void task1() {
     char buffer[100];
 
     while(1) {
-        os_start_scheduler = 0;
         sprintf(buffer, "T1: %05u", counter++);
         ST7735_SetRotation(0);
         ST7735_WriteString(0, 0, buffer, Font_11x18, RED,BLACK);
-        os_start_scheduler = 1;
         os_schedule();
     }
 }
@@ -44,11 +39,10 @@ void task2() {
     char buffer[100];
 
     while(1) {
-        os_start_scheduler = 0;
+        counter++;
         sprintf(buffer, "T2: %05u", counter++);
         ST7735_SetRotation(0);
         ST7735_WriteString(0, 18 + 1, buffer, Font_11x18, RED,BLACK);
-        os_start_scheduler = 1;
         os_schedule();
     }
 }
@@ -58,11 +52,11 @@ void task3() {
     char buffer[100];
 
     while(1) {
-        os_start_scheduler = 0;
+        counter++;
+        counter++;
         sprintf(buffer, "T3: %05u", counter++);
         ST7735_SetRotation(0);
         ST7735_WriteString(0, 18 * 2 + 1, buffer, Font_11x18, RED,BLACK);
-        os_start_scheduler = 1;
         os_schedule();
     }
 }
@@ -89,38 +83,14 @@ void os_init_task() {
 }
 
 void SVCHandler() {
-    uint32_t *stacked_pc;
+    __asm__ volatile ("msr psp, %0" : : "r" (&task1_stack[TASK_STACK_SIZE - 8]));
 
-    __asm volatile (
-            "TST lr, #4\n"              // Test EXC_RETURN bit 2 (to determine if the context is in main or process stack)
-            "ITE EQ\n"                  // If-Then-Else block
-            "MRSEQ %0, MSP\n"           // If equal, load MSP (Main Stack Pointer) into r0
-            "MRSNE %0, PSP\n"           // If not equal, load PSP (Process Stack Pointer) into r0
-            : "=r" (stacked_pc)
-    );
+    __asm__ volatile ("ldr r0, =0xFFFFFFFD");
 
-    uint8_t svc_number = ((uint8_t *) stacked_pc[6])[-2] & 0xFF;
-
-    switch (svc_number) {
-        case 0:
-            __asm__ volatile ("msr psp, %0" : : "r" (tasks[current_task].stack_pointer));
-            __asm__ volatile ("msr control, %0" : : "r" (0x2)); // Switch to use PSP
-            __asm__ volatile ("isb");
-            return;
-        case 1:
-            __asm__ volatile ("cpsid i");
-            return;
-        case 2:
-            __asm__ volatile ("cpsie i");
-            return;
-        default:
-            break;
-    }
+    __asm__ volatile ("bx r0");
 }
 
 void PendSVC() {
-    __asm__ volatile ("cpsid i");
-
     // Save the current task context
     if (current_task == 255) {
         current_task = 1;
@@ -147,8 +117,6 @@ void PendSVC() {
     __asm__ volatile ("msr psp, %0" : : "r" (tasks[current_task].stack_pointer));
 
     __asm__ volatile ("ldr r0, =0xFFFFFFFD");
-
-    __asm__ volatile ("cpsie i");
 
     __asm__ volatile ("bx r0");
 }

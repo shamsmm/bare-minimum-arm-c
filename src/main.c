@@ -84,9 +84,9 @@ void main() {
     // Enable the MPU, use the default memory map as background
     MPU->CTRL = 1 << 2 | 1 << 0;
 
-    __asm__ volatile ("svc %0" : : "I" (0));
 
     os_init_task();
+    __asm__ volatile ("svc %0" : : "I" (0));
 
     while (1) {
     }
