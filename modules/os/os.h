@@ -15,4 +15,6 @@ void os_task_scheduler();
 void os_task_scheduler_start();
 void os_init_task();
 
+uint32_t os_next_task();
+
 #endif //C0_OS_H

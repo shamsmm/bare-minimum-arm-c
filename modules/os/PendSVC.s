@@ -3,35 +3,24 @@
 
     .extern tasks
     .extern current_task
+    .extern os_next_task
     .thumb_func
     .syntax unified
 PendSVC:
-    // Save the current task context
+    // Store current context
     mrs r0, psp
+    stmdb r0!, {r4-r11}
     ldr r1, =current_task
     ldr r1, [r1]
     ldr r2, =tasks
-    ldr r2, [r2, r1, lsl #2]
-    str r0, [r2]
+    str r0, [r2, r1, lsl 2]
 
-    // Save r4-r11
-    stmdb r0!, {r4-r11}
-    str r0, [r2]
-
-    // Loop over the two tasks
-    ldr r1, =current_task
-    ldr r2, [r1]
-    add r2, r2, #1
-    mov r3, #3
-    cmp r2, r3
-    it ge
-    movge r2, #0
-    str r2, [r1]
+    // Get the next task
+    bl os_next_task
 
     // Restore the next task context
-    ldr r1, =tasks
-    ldr r2, [r1, r2, lsl #2]
-    ldr r0, [r2]
+    ldr r2, =tasks
+    ldr r0, [r2, r0, lsl 2]
     ldmia r0!, {r4-r11}
     str r0, [r2]
 

@@ -6,13 +6,17 @@
 #include "lcd_st7735/graphics/gfx.h"
 
 volatile uint32_t Tick = 0;
-uint8_t current_task = 0;
+uint32_t current_task = 0;
 uint8_t os_start_scheduler = 0;
 TCB_TypeDef tasks[TASK_COUNT];
 
 _Alignas(8) uint32_t task1_stack[TASK_STACK_SIZE];
 _Alignas(8) uint32_t task2_stack[TASK_STACK_SIZE];
 _Alignas(8) uint32_t task3_stack[TASK_STACK_SIZE];
+
+uint32_t os_next_task() {
+    return 0;
+}
 
 static inline void os_schedule() {
     *((volatile uint32_t *)0xE000ED04) = 0x10000000;
