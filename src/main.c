@@ -10,6 +10,7 @@
 #include "lcd_st7735/graphics/gfx.h"
 #include "os/os.h"
 #include "mpu/mpu.h"
+#include "system/system.h"
 
 //#define SYSTICK_CLKSOURCE_EXTERNAL
 #define SYSTICK_CLKSOURCE_INTERNAL
@@ -21,6 +22,7 @@ void delay(int milliseconds) {
 
 void main() {
     enablePLLAsSystemClock(PLL_Speed_128Mhz);
+    system_faults_configure();
 
 #if defined(SYSTICK_CLKSOURCE_EXTERNAL)
     SysTickReloadValue = 8000; // Clock source is external 8MHz
@@ -61,29 +63,6 @@ void main() {
     fillScreen(BLACK);
 
     GPIO_WritePin(PC13, HIGH);
-
-    uint32_t *pSHCSR = (uint32_t*)0xE000ED24;
-
-    *pSHCSR |= ( 1 << 16); //mem manage
-    *pSHCSR |= ( 1 << 17); //bus fault
-    *pSHCSR |= ( 1 << 18); //usage fault
-
-    // Enable the MPU
-    MPU->CTRL = 0;
-
-    // Configure the region for the peripheral access
-    MPU->RNR = 0;
-    MPU->RBAR = 0x40000000; // Base address of the peripheral space
-    MPU->RASR = (0x3 << 24) | // Full access
-                (0x1 << 19) | // Enable the region
-                (0x0 << 8)  | // Memory type: Normal
-                (0x0 << 4)  | // Sub-region disabled
-                (0x7 << 1)  | // Size = 512MB (Peripheral space)
-                (0x1 << 0);   // Enable region
-
-    // Enable the MPU, use the default memory map as background
-    MPU->CTRL = 1 << 2 | 1 << 0;
-
 
     os_init_tasks();
     __asm__ volatile ("svc %0" : : "I" (0));
