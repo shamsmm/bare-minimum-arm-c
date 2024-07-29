@@ -1,8 +1,8 @@
 #ifndef C0_OS_H
 #define C0_OS_H
 
-#define TASK_COUNT 3
-#define TASK_STACK_SIZE 0x200
+#define TASK_COUNT 4
+#define TASK_STACK_SIZE 0x100
 
 extern volatile uint32_t Tick;
 
