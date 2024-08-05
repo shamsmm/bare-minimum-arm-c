@@ -5,19 +5,17 @@
 extern "C" {
 #endif
 
-#define TASK_COUNT 4
-#define TASK_STACK_SIZE 0x200
-
 extern volatile uint32_t Tick;
 
 typedef struct TCB {
     uint32_t * stack_pointer;
-    // Add other task-specific data here
 } TCB_TypeDef;
 
-void os_init_tasks();
 void os_enable_preemption();
 void os_disable_preemption();
+void os_init_task_default(uint32_t * stack, uint32_t stack_size, void (* task)(), uint32_t id);
+void os_init_scheduler(uint32_t * stack);
+void os_schedule();
 
 #define OS_TASK_LOCK()      extern uint32_t os_preemption_status;\
                             uint32_t preemption_status = os_preemption_status;\

@@ -13,6 +13,58 @@
 //#define SYSTICK_CLKSOURCE_EXTERNAL
 #define SYSTICK_CLKSOURCE_INTERNAL
 
+_Alignas(8) uint32_t task1_stack[0x200];
+_Alignas(8) uint32_t task2_stack[0x200];
+_Alignas(8) uint32_t task3_stack[0x200];
+_Alignas(8) uint32_t task4_stack[0x200];
+
+void task1() {
+    uint16_t counter = 0;
+    char buffer[100];
+
+    while(1) {
+        sprintf(buffer, "T1: %05u", counter++);
+        ST7735_SetRotation(0);
+        ST7735_WriteString(0, 0, buffer, Font_11x18, RED,BLACK);
+        os_schedule();
+    }
+}
+
+void task2() {
+    uint16_t counter = 0;
+    char buffer[100];
+
+    while(1) {
+        counter++;
+        sprintf(buffer, "T2: %05u", counter++);
+        ST7735_SetRotation(0);
+        ST7735_WriteString(0, 18 + 1, buffer, Font_11x18, RED,BLACK);
+        os_schedule();
+    }
+}
+
+void task3() {
+    uint16_t counter = 0;
+    char buffer[100];
+
+    while(1) {
+        counter++;
+        counter++;
+        sprintf(buffer, "T3: %05u", counter++);
+        ST7735_SetRotation(0);
+        ST7735_WriteString(0, 18 * 2 + 1, buffer, Font_11x18, RED,BLACK);
+        os_schedule();
+    }
+}
+
+void task4() {
+    while(1) {
+        GPIO_WritePin(PC13, LOW);
+        delay(1000);
+        GPIO_WritePin(PC13, HIGH);
+        delay(1000);
+    }
+}
 
 
 void enable_spi_for_lcd() {
@@ -67,13 +119,15 @@ int main() {
     GPIO_WritePin(PC13, HIGH);
     UART_Transmit_Line(USART1, "ABooooooooooood");
     printf("OS initializing tasks");
-    os_init_tasks();
+
+    os_init_scheduler(&task1_stack[0x200 - 8]);
+    os_init_task_default(task1_stack, 0x200, task1, 0);
+    os_init_task_default(task2_stack, 0x200, task2, 1);
+    os_init_task_default(task3_stack, 0x200, task3, 2);
+    os_init_task_default(task4_stack, 0x200, task4, 3);
 
     printf("Context switching to first task");
     __asm__ volatile ("svc %0" : : "I" (0));
 
-    while (1) {
-        auto * app = new Application();
-        app->test();
-    }
+    return 0;
 }
