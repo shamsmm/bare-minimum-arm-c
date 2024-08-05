@@ -1,6 +1,9 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/stat.h>
+#include "os/os.h"
+#include "uart/uart.h"
+#include "bluepill/bluepill.h"
 
 int _getpid(void)
 {
@@ -46,20 +49,18 @@ int _write_r (struct _reent *r, int file, char * ptr, int len)
     file = file;
     ptr = ptr;
 
-#if 0
-    int index;
 
-  /* For example, output string by UART */
-  for(index=0; index<len; index++)
-  {
-    if (ptr[index] == '\n')
+    OS_TASK_LOCK();
+    for(int index=0; index<len; index++)
     {
-      uart_putc('\r');
-    }
+        if (ptr[index] == '\n')
+        {
+            UART_Transmit(USART1, '\r');
+        }
 
-    uart_putc(ptr[index]);
-  }
-#endif
+        UART_Transmit(USART1, ptr[index]);
+    }
+    OS_TASK_UNLOCK();
 
     return len;
 }

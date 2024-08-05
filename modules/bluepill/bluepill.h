@@ -13,6 +13,8 @@
 #define TIM1 (volatile unsigned long *) 0x40012C00
 #define TIM2 (volatile unsigned long *) 0x40000000
 
+const static UART USART1 = {(volatile unsigned long *) 0x40013800};
+
 const static GPIO_Pins_Configuration_TypeDef OUTPUT = {GPIO_MODE_OUTPUT_50MHz, GPIO_CNF_OUTPUT_PUSH_PULL};
 const static GPIO_Pins_Configuration_TypeDef OUTPUT_OPEN_DRAIN = {GPIO_MODE_OUTPUT_50MHz, GPIO_CNF_OUTPUT_OPEN_DRAIN};
 const static GPIO_Pins_Configuration_TypeDef OUTPUT_MEDIUM_SPEED = {GPIO_MODE_OUTPUT_10MHz, GPIO_CNF_OUTPUT_PUSH_PULL};
@@ -39,6 +41,7 @@ const static GPIO_Pin_TypeDef PA6 = {PORTA, 6, 6};
 const static GPIO_Pin_TypeDef PA7 = {PORTA, 7, 7};
 const static GPIO_Pin_TypeDef PA8 = {PORTA, 8};
 const static GPIO_Pin_TypeDef PA9 = {PORTA, 9};
+const static GPIO_Pin_TypeDef PA10 = {PORTA, 10};
 
 const static GPIO_Pin_TypeDef PB0 = {PORTB, 0, 8, 1};
 const static GPIO_Pin_TypeDef PB1 = {PORTB, 1, 9, 1};

@@ -1,6 +1,4 @@
-#include <malloc.h>
 #include <stdio.h>
-
 #include "gpio/gpio.h"
 #include "rcc/rcc.h"
 #include "bluepill/bluepill.h"
@@ -9,15 +7,21 @@
 #include "lcd_st7735/lcd.h"
 #include "lcd_st7735/graphics/gfx.h"
 #include "os/os.h"
-#include "mpu/mpu.h"
 #include "system/system.h"
 
 //#define SYSTICK_CLKSOURCE_EXTERNAL
 #define SYSTICK_CLKSOURCE_INTERNAL
 
-void delay(int milliseconds) {
-    unsigned long initial = Tick;
-    while (Tick - initial < milliseconds/10);
+
+
+void enable_spi_for_lcd() {
+    SPI1->CR1.MSTR = 1;
+    SPI1->CR1.BR = 0;
+    SPI1->CR1.BIDIMODE = 1;
+    SPI1->CR1.BIDIOE = 1;
+    SPI1->CR1.SSI = 1;
+    SPI1->CR1.SSM = 1;
+    SPI1->CR1.SPE = 1;
 }
 
 void main() {
@@ -36,9 +40,12 @@ void main() {
     enableClocks(BLUEPILL_ALL_APB2_INTERFACES_CLOCK);
     enableClocks(BLUEPILL_ALL_APB1_INTERFACES_CLOCK);
 
-//    pinMode(PA8, ALTERNATE_PUSH_PULL);
-    GPIO_PinMode(PA9, ALTERNATE);
-    GPIO_PinMode(PC13, OUTPUT);
+    GPIO_PinMode(PA8, ALTERNATE); // To expose system clock
+    GPIO_PinMode(PA9, ALTERNATE); // TX and RX
+    GPIO_PinMode(PA10, ALTERNATE); // TX and RX
+    GPIO_PinMode(PC13, OUTPUT); // LED
+
+    enableUART(USART1, 64000000, 9600);
 
     GPIO_PinMode(PA2, OUTPUT);
     GPIO_PinMode(PB6, OUTPUT);
@@ -49,22 +56,19 @@ void main() {
 
     delay(100);
 
-    SPI1->CR1.MSTR = 1;
-    SPI1->CR1.BR = 0;
-    SPI1->CR1.BIDIMODE = 1;
-    SPI1->CR1.BIDIOE = 1;
-    SPI1->CR1.SSI = 1;
-    SPI1->CR1.SSM = 1;
-    SPI1->CR1.SPE = 1;
+    enable_spi_for_lcd();
 
-    delay(100);
+    delay(500);
 
     ST7735_Init(0);
     fillScreen(BLACK);
 
     GPIO_WritePin(PC13, HIGH);
-
+    UART_Transmit_Line(USART1, "ABooooooooooood");
+    printf("OS initializing tasks");
     os_init_tasks();
+
+    printf("Context switching to first task");
     __asm__ volatile ("svc %0" : : "I" (0));
 
     while (1) {
