@@ -1,6 +1,10 @@
 #ifndef C0_OS_H
 #define C0_OS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define TASK_COUNT 4
 #define TASK_STACK_SIZE 0x200
 
@@ -21,4 +25,8 @@ void os_disable_preemption();
 
 #define OS_TASK_UNLOCK()  if (preemption_status)\
                             os_enable_preemption()
+
+#ifdef __cplusplus
+}
+#endif
 #endif //C0_OS_H

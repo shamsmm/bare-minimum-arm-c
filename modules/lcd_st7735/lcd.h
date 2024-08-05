@@ -1,6 +1,10 @@
 #ifndef __ST7735_H__
 #define __ST7735_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 #include "graphics/fonts.h"
 #include "bluepill/bluepill.h"
@@ -99,4 +103,7 @@ void ST7735_InvertColors(bool invert);
 
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif // __ST7735_H__

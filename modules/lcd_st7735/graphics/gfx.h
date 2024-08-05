@@ -8,6 +8,10 @@
 #ifndef INC_GFX_FUNCTIONS_H_
 #define INC_GFX_FUNCTIONS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 void drawPixel(int16_t x, int16_t y, uint16_t color);
@@ -39,4 +43,7 @@ void testFilledRoundRects();
 void testFillScreen();
 void testAll (void);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* INC_GFX_FUNCTIONS_H_ */

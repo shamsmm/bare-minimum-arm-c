@@ -1,6 +1,10 @@
 #ifndef C0_MPU_H
 #define C0_MPU_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define MPU ( (volatile MPU_Base_TypeDef *) 0xE000ED90)
 
 //typedef struct MPU_CTRL {
@@ -26,4 +30,7 @@ typedef struct MPU_Base {
     volatile unsigned long RASR;
 } MPU_Base_TypeDef;
 
+#ifdef __cplusplus
+}
+#endif
 #endif //C0_MPU_H

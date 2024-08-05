@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include "gpio/gpio.h"
 #include "rcc/rcc.h"
 #include "bluepill/bluepill.h"
@@ -8,6 +8,7 @@
 #include "lcd_st7735/graphics/gfx.h"
 #include "os/os.h"
 #include "system/system.h"
+#include "app/Application.h"
 
 //#define SYSTICK_CLKSOURCE_EXTERNAL
 #define SYSTICK_CLKSOURCE_INTERNAL
@@ -24,7 +25,7 @@ void enable_spi_for_lcd() {
     SPI1->CR1.SPE = 1;
 }
 
-void main() {
+int main() {
     enablePLLAsSystemClock(PLL_Speed_128Mhz);
     system_faults_configure();
 
@@ -72,5 +73,7 @@ void main() {
     __asm__ volatile ("svc %0" : : "I" (0));
 
     while (1) {
+        auto * app = new Application();
+        app->test();
     }
 }

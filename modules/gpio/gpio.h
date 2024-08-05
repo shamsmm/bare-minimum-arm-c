@@ -1,6 +1,10 @@
 #ifndef C0_GPIO_H
 #define C0_GPIO_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include "adc/adc.h"
 #include "common/common.h"
@@ -78,4 +82,7 @@ void GPIO_ByteMode(GPIO_Byte_TypeDef byte, GPIO_Pins_Configuration_TypeDef conf)
 void GPIO_PortMode(GPIO_Port_TypeDef port, GPIO_Pins_Configuration_TypeDef conf);
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif //C0_GPIO_H

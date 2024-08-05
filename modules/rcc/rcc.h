@@ -1,6 +1,10 @@
 #ifndef C0_RCC_H
 #define C0_RCC_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #define RCC (volatile unsigned long *) 0x40021000
@@ -32,4 +36,7 @@ void enablePLLAsSystemClockWithMultiplication(uint8_t mul);
 
 void enablePLLAsSystemClock(ClockSpeed speed);
 
+#ifdef __cplusplus
+}
+#endif
 #endif //C0_RCC_H

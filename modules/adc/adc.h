@@ -1,6 +1,10 @@
 #ifndef C0_ADC_H
 #define C0_ADC_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "gpio/gpio.h"
 
 #define ADC_SR 0
@@ -54,4 +58,7 @@ void enableContinuousADC(ADC_CONFIGURATION conf);
 
 unsigned short analogReadInterface(ADC_CONFIGURATION conf, ADC_Channel_TypeDef channel);
 
+#ifdef __cplusplus
+}
+#endif
 #endif //C0_ADC_H

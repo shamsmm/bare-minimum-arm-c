@@ -1,6 +1,10 @@
 #ifndef C0_UART_H
 #define C0_UART_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define USART_SR 0
 #define USART_DR 1
 #define USART_BRR 2
@@ -25,4 +29,7 @@ void UART_Transmit(UART uart, char data);
 void UART_Transmit_Line(UART uart, const char* data);
 void UART_Transmit_Number(UART uart, unsigned short number);
 
+#ifdef __cplusplus
+}
+#endif
 #endif //C0_UART_H

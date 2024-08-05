@@ -1,6 +1,10 @@
 #ifndef C0_BLUEPILL_H
 #define C0_BLUEPILL_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "gpio/gpio.h"
 #include "rcc/rcc.h"
 #include "adc/adc.h"
@@ -74,4 +78,7 @@ void enablePLLAsSystemClock72MHz();
 
 void enablePLLAsSystemClock128MHz();
 
+#ifdef __cplusplus
+}
+#endif
 #endif //C0_BLUEPILL_H

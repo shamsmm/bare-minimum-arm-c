@@ -1,6 +1,10 @@
 #ifndef C0_SPI_H
 #define C0_SPI_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define SPI1     ( (volatile SPI_Base_TypeDef*)       0x40013000)
 #define SPI2     ( (volatile SPI_Base_TypeDef*)       0x40013800)
 
@@ -44,4 +48,7 @@ typedef struct SPI_Base {
 void SPI_Transmit_Byte(volatile SPI_Base_TypeDef * SPI, char data);
 void SPI_Transmit_Bytes(volatile SPI_Base_TypeDef * SPI, char * data, int size);
 
+#ifdef __cplusplus
+}
+#endif
 #endif //C0_SPI_H

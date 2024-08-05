@@ -1,6 +1,10 @@
 #ifndef C0_I2C_H
 #define C0_I2C_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define I2C_CR1 ((volatile I2C_CR1_TypeDef *) 0x40005400)
 #define I2C_CR2 ((volatile I2C_CR2_TypeDef *) 0x40005404)
 #define I2C_CCR ((volatile I2C_CCR_TypeDef *) 0x4000541C)
@@ -92,4 +96,7 @@ void I2C_End();
 void I2C_Send_Byte(char address, char data);
 void I2C_Send_2_Bytes(char address, short data);
 
+#ifdef __cplusplus
+}
+#endif
 #endif //C0_I2C_H
