@@ -117,8 +117,8 @@ int main() {
     fillScreen(BLACK);
 
     GPIO_WritePin(PC13, HIGH);
-    UART_Transmit_Line(USART1, "ABooooooooooood");
-    printf("OS initializing tasks");
+
+    printf("OS initializing tasks\n");
 
     os_init_scheduler(&task1_stack[0x200 - 8]);
     os_init_task_default(task1_stack, 0x200, task1, 0);
@@ -126,7 +126,7 @@ int main() {
     os_init_task_default(task3_stack, 0x200, task3, 2);
     os_init_task_default(task4_stack, 0x200, task4, 3);
 
-    printf("Context switching to first task");
+    printf("Context switching to first task\n");
     __asm__ volatile ("svc %0" : : "I" (0));
 
     return 0;

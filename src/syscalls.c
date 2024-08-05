@@ -1,6 +1,7 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/unistd.h>
 #include "os/os.h"
 #include "uart/uart.h"
 #include "bluepill/bluepill.h"
@@ -43,22 +44,17 @@ int _lseek_r (struct _reent *r, int file, int ptr, int dir)
     return 0;
 }
 
-int _write_r (struct _reent *r, int file, char * ptr, int len)
+int _write(int file, char *data, int len)
 {
-    r = r;
-    file = file;
-    ptr = ptr;
-
-
     OS_TASK_LOCK();
     for(int index=0; index<len; index++)
     {
-        if (ptr[index] == '\n')
+        if (data[index] == '\n')
         {
             UART_Transmit(USART1, '\r');
         }
 
-        UART_Transmit(USART1, ptr[index]);
+        UART_Transmit(USART1, data[index]);
     }
     OS_TASK_UNLOCK();
 
